@@ -33,19 +33,32 @@ window.login = function () {
         window.location.href = "../../templates/dashboard/dashboard.html";
       });
     })
-    .catch((error) => {
-      Swal.fire({
-        icon: "error",
-        title: "Login Failed",
-        text: error.message,
-        confirmButtonColor: "#d33"
-      });
-    });
+   .catch((error) => {
+  let message = "Something went wrong. Please try again later.";
+
+  switch (error.code) {
+    case "auth/user-not-found":
+      message = "No account found with that email.";
+      break;
+    case "auth/invalid-email":
+      message = "The email address is badly formatted.";
+      break;
+    case "auth/network-request-failed":
+      message = "Network error. Please check your connection.";
+      break;
+  }
+
+  Swal.fire({
+    icon: "error",
+    title: "Reset Failed",
+    text: message,
+    confirmButtonColor: "#d33"
+  });
+});
 
   return false;
 };
 
-// 🔁 Forgot Password Handler
 document.getElementById("forgot-password").addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -62,20 +75,35 @@ document.getElementById("forgot-password").addEventListener("click", (e) => {
   }
 
   sendPasswordResetEmail(auth, email)
-    .then(() => {
-      Swal.fire({
-        icon: "success",
-        title: "Reset Link Sent",
-        html: "Please check your email to reset your password.<br><strong>Don’t forget to check your Spam or Junk folder!</strong>",
-        confirmButtonColor: "#3085d6"
-      });
-    })
-    .catch((error) => {
-      Swal.fire({
-        icon: "error",
-        title: "Reset Failed",
-        text: error.message,
-        confirmButtonColor: "#d33"
-      });
+  .then(() => {
+    Swal.fire({
+      icon: "success",
+      title: "Password Reset Email Sent",
+      html: `
+        <p>We've sent a password reset link to:</p>
+        <strong>${email}</strong>
+        <br><br>
+        <small>Please also check your <em>Spam</em> or <em>Junk</em> folder if you don’t see it in your inbox.</small>
+      `,
+      confirmButtonText: "OK",
+      confirmButtonColor: "#3085d6"
     });
+  })
 });
+
+const loginButton = document.querySelector(".button-container button");
+loginButton.disabled = true;
+loginButton.innerText = "Logging in...";
+
+// Re-enable after login
+signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // ...
+  })
+  .catch((error) => {
+    // ...
+  })
+  .finally(() => {
+    loginButton.disabled = false;
+    loginButton.innerText = "Login";
+  });
