@@ -1,0 +1,422 @@
+@import url(style.css);
+@import url(sidebar.css);
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  padding: 8px 0;
+  border-bottom: 2px solid #ddd;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.header-title h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.notification {
+  position: relative;
+  cursor: pointer;
+  padding: 6px;
+  transition: all 0.2s ease;
+}
+
+.notification i {
+  font-size: 18px;
+  color: #801100;
+}
+
+.notification-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ff5252;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+  line-height: 1;
+}
+
+.notification:hover i {
+  color: #a31414;
+}
+
+/* Stats Section Container */
+
+.stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: flex-start;
+  align-items: stretch;
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+/* Stat Cards (Total Employees)*/
+
+.stat-card {
+  width: 160px;
+  height: 90px;
+  padding: 14px;
+  border-radius: 14px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.stat-card.large {
+  width: 200px;
+  height: auto;
+}
+
+.circle-container {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #f4f4f4;
+  display: flex;
+  border: 1px solid #801100;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.circle-container:hover {
+  background-color: #e0e0e0;
+}
+
+.stat-icon {
+  font-size: 22px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.circle-container .stat-icon {
+  font-size: 24px;
+  color: #801100;
+}
+
+.stat-icon:hover {
+  color: #801100;
+  transform: scale(1.1);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.stat-counter {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.stat-name {
+  font-size: 12px;
+  color: #777;
+  opacity: 0.9;
+  text-align: center;
+}
+
+.stat-card .count {
+  font-size: 18px;
+  color: #801100;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* Organization Cards */
+
+.org-container {
+  width: 200px;
+  padding: 16px;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.org-container .stat-icon {
+  font-size: 24px;
+  color: #801100;
+}
+
+.org-container h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.stat-card-org {
+  background-color: #fff6f6;
+  border: 1px solid #801100;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+.stat-card-org:hover {
+  background-color: #fff1f1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(128, 17, 0, 0.15);
+}
+
+/* Departments Section */
+
+.department-container {
+  flex-grow: 1;
+  min-width: 400px;
+  max-width: 100%;
+  padding: 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+.department-container h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.departments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+/* Department Cards Container */
+
+.departments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.dept-card {
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #222;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  max-width: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  gap: 10px;
+}
+
+.dept-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  filter: brightness(1.04);
+}
+
+.dept-card .label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.dept-card i {
+  font-size: 15px;
+  color: #801100;
+}
+
+.dept-card .count {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.dept-card:nth-child(1) {
+  background: #ffebee;
+  border-left: 6px solid #c62828;
+}
+.dept-card:nth-child(2) {
+  background: #e3f2fd;
+  border-left: 6px solid #1565c0;
+}
+.dept-card:nth-child(3) {
+  background: #e8f5e9;
+  border-left: 6px solid #2e7d32;
+}
+.dept-card:nth-child(4) {
+  background: #f3e5f5;
+  border-left: 6px solid #6a1b9a;
+}
+.dept-card:nth-child(5) {
+  background: #fff3e0;
+  border-left: 6px solid #ef6c00;
+}
+.dept-card:nth-child(6) {
+  background: #e0f2f1;
+  border-left: 6px solid #00897b;
+}
+.dept-card:nth-child(7) {
+  background: #fce4ec;
+  border-left: 6px solid #ad1457;
+}
+.dept-card:nth-child(8) {
+  background: #efebe9;
+  border-left: 6px solid #5d4037;
+}
+
+/* Applicants Container */
+
+.applicants-container {
+  width: 100%;
+  padding: 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  margin-top: 50px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .stats-container {
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .stat-card {
+    width: 100%;
+    height: auto;
+    padding: 12px;
+  }
+
+  .org-container {
+    width: 100%;
+  }
+
+  .department-container {
+    padding: 16px;
+  }
+
+  .departments-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+
+  .circle-container {
+    width: 100px;
+    height: 100px;
+  }
+
+  .stat-icon {
+    font-size: 20px;
+  }
+
+  .stat-counter {
+    font-size: 16px;
+  }
+
+  .stat-name {
+    font-size: 11px;
+  }
+
+  .applicants-container {
+    padding: 16px;
+    margin-top: 32px;
+  }
+}
+
+@media (max-width: 576px) {
+  .header-title h1 {
+    font-size: 16px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stat-card,
+  .org-container,
+  .department-container {
+    width: 100%;
+  }
+
+  .departments-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dept-card {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 12px;
+  }
+
+  .circle-container {
+    width: 90px;
+    height: 90px;
+  }
+
+  .stat-counter {
+    font-size: 15px;
+  }
+
+  .stat-name {
+    font-size: 10px;
+  }
+
+  .stat-icon {
+    font-size: 18px;
+  }
+}

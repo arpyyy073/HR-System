@@ -1,0 +1,129 @@
+@import url(style.css);
+
+
+body {
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(to right, #242424, #801100);
+  color: #333;
+}
+
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.login-container img {
+  width: 100px;
+  height: auto;
+  display: block;
+  margin: 0 auto 2px;
+}
+
+
+.login-container h2 {
+  margin-top: 0;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-container h2 span {
+  color: #801100;
+}
+
+
+.email-container input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Ensures padding + border are included in total width */
+  margin-bottom: 10px;
+}
+
+.email-container input:focus {
+  border-color: black;
+  outline: none;
+}
+
+.email-container p {
+  margin: 0;
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.password-container input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Ensures padding + border are included in total width */
+  margin-bottom: 10px;
+}
+
+.password-container input:focus {
+  border-color: black;
+  outline: none;
+}
+
+.password-container p {
+  margin: 0;
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.password-container a {
+  color: #801100;
+  font-size: 12px;
+  margin-top: 2px;
+  margin-bottom: 20px;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.password-container p a:hover {
+  text-decoration: underline;
+}
+
+.button-container button {
+  background-color: white;
+  color: #801100;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #801100;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: background-color 0.5s, color 0.5s;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.button-container button:hover {
+  background-color: #801100;
+  color: white;
+}
+
+.button-container p {
+  text-align: center;
+  margin-top: 10px;
+  color: #333;
+  font-size: 15px;
+}
+
+.button-container a {
+  color: #801100;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button-container a:hover {
+  text-decoration: underline;
+}

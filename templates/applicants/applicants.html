@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hyacinth - Applicants</title>
+
+    <!-- CSS Imports -->
+    <link rel="stylesheet" href="../../style/applicant.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
+    />
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+    <main-sidebar> </main-sidebar>
+
+    <div class="wrap-container">
+      <!-- Header -->
+      <div class="applicants-header">
+        <div class="header-title">
+          <h1>Applicants Overview</h1>
+        </div>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="applicants-container">
+        <!-- Total Applicants -->
+        <div class="total-applicants large">
+          <h3>Total Applicants</h3>
+          <div class="circle-container">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-counter">0</div>
+            <div class="stat-name">Applicants</div>
+          </div>
+        </div>
+
+        <!-- Status Breakdown -->
+        <div class="application-status">
+          <h3>Application Status</h3>
+          <div class="status-list">
+            <div class="status-item">
+              <span class="status-label">Passed</span
+              ><span class="status-count">0</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Pending</span
+              ><span class="status-count">0</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Rejected</span
+              ><span class="status-count">0</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Callback</span
+              ><span class="status-count">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Application Source -->
+        <div class="application-source">
+          <h3>Application Source</h3>
+          <div class="source-list">
+            <div class="source-item">
+              <span class="source-label">Online Post</span
+              ><span class="source-count">0</span>
+            </div>
+            <div class="source-item">
+              <span class="source-label">Walk-in</span
+              ><span class="source-count">0</span>
+            </div>
+            <div class="source-item">
+              <span class="source-label">Referred</span
+              ><span class="source-count">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Graph -->
+        <div class="applicants-graph">
+          <h3>Applicants Overview</h3>
+          <canvas id="applicantsChart" height="150"></canvas>
+        </div>
+      </div>
+
+      <!-- Applicants Table -->
+      <div class="data-table-container">
+        <div class="table-header">
+          <h2>Applicants List</h2>
+
+          <!-- Search Input -->
+          <div class="search-container">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search Applicants..."
+            />
+          </div>
+
+          <!-- Filters -->
+          <div class="filter-buttons">
+            <select id="filterSource">
+              <option value="">All Sources</option>
+              <option value="Online Post">Online Post</option>
+              <option value="Walk-in">Walk-in</option>
+              <option value="Referred">Referred</option>
+            </select>
+
+            <select id="filterStatus">
+              <option value="">All Status</option>
+              <option value="Passed">Passed</option>
+              <option value="Pending">Pending</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Callback">Callback</option>
+            </select>
+
+            <input type="date" id="filterDate" />
+          </div>
+
+          <!-- Add Applicant Button -->
+          <div>
+            <button class="top-btn" id="addApplicantBtn">
+              <i class="fa-solid fa-user-plus"></i> Add Applicant
+            </button>
+          </div>
+        </div>
+
+        <!-- DataTable -->
+        <table id="applicantTable" class="display dataTable">
+          <thead>
+            <tr>
+              <th>Applicant Name</th>
+              <th>Degree/Course</th>
+              <th>Application Date</th>
+              <th>Source</th>
+              <th>Initial Interview</th>
+              <th>Final Interview</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>John Smith</td>
+              <td>BS Computer Science</td>
+              <td>2025-06-12</td>
+              <td>Online Post</td>
+              <td>2025-06-15</td>
+              <td>2025-06-20</td>
+              <td>Pending</td>
+              <td class="action-btns">
+                <button class="view-btn icon-btn view" title="View">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="edit-btn icon-btn edit" title="Edit">
+                  <i class="fas fa-pen"></i>
+                </button>
+                <button class="delete-btn icon-btn delete" title="Delete">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination Controls -->
+        <div class="pagination">
+          <button class="prev-page" disabled>
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <span class="page-info">Page 1 of 1</span>
+          <button class="next-page" disabled>
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        const table = $("#applicantTable").DataTable({
+          dom: "t",
+          paging: false,
+          ordering: true,
+        });
+
+        $("#searchInput").on("keyup", function () {
+          table.search(this.value).draw();
+        });
+
+        $("#filterSource, #filterStatus").on("change", function () {
+          const source = $("#filterSource").val().toLowerCase();
+          const status = $("#filterStatus").val().toLowerCase();
+          table.rows().every(function () {
+            const row = this.data().join(" ").toLowerCase();
+            const match =
+              (!source || row.includes(source)) &&
+              (!status || row.includes(status));
+            this.visible(match);
+          });
+        });
+
+        $("#filterDate").on("change", function () {
+          const date = this.value;
+          table.rows().every(function () {
+            const appDate = this.data()[2];
+            this.visible(!date || appDate === date);
+          });
+        });
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const ctx = document.getElementById("applicantsChart").getContext("2d");
+
+      const applicantsChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Passed", "Pending", "Rejected", "Callback"],
+          datasets: [
+            {
+              label: "Applicants",
+              data: [12, 19, 5, 3], // Example data
+              backgroundColor: ["#4CAF50", "#FFC107", "#F44336", "#03A9F4"],
+              borderRadius: 8,
+              barThickness: 40,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  return ` ${context.parsed.y} applicants`;
+                },
+              },
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 5,
+              },
+            },
+          },
+        },
+      });
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document
+          .querySelectorAll(".delete-btn icon-btn delete")
+          .forEach((button) => {
+            button.addEventListener("click", function () {
+              const ItemId = this.getAttribute("data-id");
+
+              Swal.fire({
+                title: "Are you Sure?",
+                text: "This can't be undone!",
+
+                icon: "warning",
+
+                showCancelButton: true,
+                confirmButtonColor: "#e3342f",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes,please delete it!",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = `delete.html?id=${ItemId}`;
+                }
+              });
+            });
+          });
+      });
+    </script>
+
+    <script src="../../js/applicants.js"></script>
+    <script src="../sidebar/sidebar.js"></script>
+  </body>
+</html>
