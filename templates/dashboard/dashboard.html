@@ -128,17 +128,15 @@
 
 
   <script type="module" src="../sidebar/sidebar.js"></script>
-  <script type="module">
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { app } from "../../js/firebase-config.js";
 
-    const auth = getAuth(app);
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "/HR-System/templates/auth/login.html";
-      }
-    });
+  <script type="module">
+    import { enforceAuthRedirect } from "../utils/authGuard.js";
+  
+    enforceAuthRedirect(); 
   </script>
+  
+  
+  
   <script src="../../js/dashboard.js"></script>
 </body>
 
