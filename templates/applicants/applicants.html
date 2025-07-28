@@ -15,23 +15,21 @@
       rel="stylesheet"
       href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
     />
+    <script type="module" src="../sidebar/sidebar.js"></script>
   </head>
 
   <body>
-    <!-- Sidebar -->
     <main-sidebar> </main-sidebar>
-
     <div class="wrap-container">
-      <!-- Header -->
       <div class="applicants-header">
         <div class="header-title">
           <h1>Applicants Overview</h1>
         </div>
       </div>
 
-      <!-- Stats Section -->
+
       <div class="applicants-container">
-        <!-- Total Applicants -->
+
         <div class="total-applicants large">
           <h3>Total Applicants</h3>
           <div class="circle-container">
@@ -41,7 +39,7 @@
           </div>
         </div>
 
-        <!-- Status Breakdown -->
+
         <div class="application-status">
           <h3>Application Status</h3>
           <div class="status-list">
@@ -64,7 +62,7 @@
           </div>
         </div>
 
-        <!-- Application Source -->
+
         <div class="application-source">
           <h3>Application Source</h3>
           <div class="source-list">
@@ -83,19 +81,19 @@
           </div>
         </div>
 
-        <!-- Graph -->
+
         <div class="applicants-graph">
           <h3>Applicants Overview</h3>
           <canvas id="applicantsChart" height="150"></canvas>
         </div>
       </div>
 
-      <!-- Applicants Table -->
+
       <div class="data-table-container">
         <div class="table-header">
           <h2>Applicants List</h2>
 
-          <!-- Search Input -->
+
           <div class="search-container">
             <input
               type="text"
@@ -104,7 +102,6 @@
             />
           </div>
 
-          <!-- Filters -->
           <div class="filter-buttons">
             <select id="filterSource">
               <option value="">All Sources</option>
@@ -124,7 +121,7 @@
             <input type="date" id="filterDate" />
           </div>
 
-          <!-- Add Applicant Button -->
+ 
           <div>
             <button class="top-btn" id="addApplicantBtn">
               <i class="fa-solid fa-user-plus"></i> Add Applicant
@@ -132,7 +129,7 @@
           </div>
         </div>
 
-        <!-- DataTable -->
+
         <table id="applicantTable" class="display dataTable">
           <thead>
             <tr>
@@ -170,7 +167,7 @@
           </tbody>
         </table>
 
-        <!-- Pagination Controls -->
+
         <div class="pagination">
           <button class="prev-page" disabled>
             <i class="fas fa-chevron-left"></i>
@@ -183,7 +180,6 @@
       </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
@@ -231,7 +227,7 @@
           datasets: [
             {
               label: "Applicants",
-              data: [12, 19, 5, 3], // Example data
+              data: [12, 19, 5, 3], 
               backgroundColor: ["#4CAF50", "#FFC107", "#F44336", "#03A9F4"],
               borderRadius: 8,
               barThickness: 40,

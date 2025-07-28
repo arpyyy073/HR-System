@@ -5,31 +5,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hyacinth-Dashboard</title>
-  <link rel="stylesheet" href="../../style/dashboard.css">
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../../style/dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+   
+  </style>
 </head>
 
 <body>
-  <!-- Sidebar PHP CALLER -->
-  <main-sidebar>
-
-
-  </main-sidebar>
-
-
-
-  <!-- Dashboard Content -->
+  <main-sidebar></main-sidebar>
   <div class="wrap-container">
 
-    <!-- Dashboard Header -->
     <div class="dashboard-header">
-
       <div class="header-title">
         <h1>Dashboard Overview</h1>
       </div>
-
       <div class="header-actions">
         <div class="notification">
           <i class="fas fa-bell"></i>
@@ -38,12 +29,8 @@
       </div>
     </div>
 
-
-    <!-- Stats Card Layout -->
     <div class="stats-container horizontal">
 
-
-      <!--Total Employees-->
       <div class="stat-card large">
         <h3>Total Employees</h3>
         <div class="circle-container">
@@ -52,10 +39,6 @@
           <div class="stat-name">Employees</div>
         </div>
       </div>
-
-
-
-      <!-- Organizations -->
 
       <div class="org-container">
         <h3>Organizations</h3>
@@ -71,11 +54,7 @@
           <div class="stat-counter" id="hhi-count">0</div>
           <div class="stat-name">HHI</div>
         </div>
-
       </div>
-
-
-      <!-- Departments -->
 
       <div class="department-container">
         <h3>Departments</h3>
@@ -126,17 +105,41 @@
         </div>
       </div>
     </div>
-
   </div>
 
+<div id="departmentModal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h2 id="modalTitle">Details</h2>
+    <table class="dept-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Position</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody id="modalTableBody">
+      
+      </tbody>
+    </table>
+  </div>
+</div>
 
 
-  <script src=" ../../js/dashboard.js">
+  <script type="module" src="../sidebar/sidebar.js"></script>
+  <script type="module">
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { app } from "../../js/firebase-config.js";
+
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "/HR-System/templates/auth/login.html";
+      }
+    });
   </script>
-  <script src="../../js/img.js"></script>
-  <script src="../sidebar/sidebar.js"></script>
-
-
+  <script src="../../js/dashboard.js"></script>
 </body>
 
 </html>

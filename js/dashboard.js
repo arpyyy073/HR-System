@@ -1,143 +1,105 @@
-const departmentsData = [
-  {
-    name: "ADMIN",
-    tag: "admin",
-    employees: {
-      active: 12,
-      inactive: 2,
-    },
-  },
-  {
-    name: "CARRIER CONNECTION",
-    tag: "carrier",
-    employees: {
-      active: 5,
-      inactive: 1,
-    },
-  },
-  {
-    name: "CONNECT 2 BULK",
-    tag: "connect",
-    employees: {
-      active: 6,
-      inactive: 2,
-    },
-  },
-  {
-    name: "DLPUB",
-    tag: "dlpub",
-    employees: {
-      active: 7,
-      inactive: 0,
-    },
-  },
-  {
-    name: "IT AND TECHNICAL",
-    tag: "it-tech",
-    employees: {
-      active: 8,
-      inactive: 1,
-    },
-  },
-  {
-    name: "INTERN",
-    tag: "intern",
-    employees: {
-      active: 4,
-      inactive: 0,
-    },
-  },
-  {
-    name: "NIBF",
-    tag: "nibf",
-    employees: {
-      active: 2,
-      inactive: 0,
-    },
-  },
-  {
-    name: "OPPY",
-    tag: "oppy",
-    employees: {
-      active: 10,
-      inactive: 1,
-    },
-  },
-  {
-    name: "PEARCE WW",
-    tag: "pearce",
-    employees: {
-      active: 5,
-      inactive: 2,
-    },
-  },
-  {
-    name: "RECOVERY MODE",
-    tag: "recovery",
-    employees: {
-      active: 3,
-      inactive: 0,
-    },
-  },
-  {
-    name: "UNICORN",
-    tag: "unicorn",
-    employees: {
-      active: 6,
-      inactive: 3,
-    },
-  },
-];
+  document.addEventListener("DOMContentLoaded", () => {
+    const deptIds = [
+      "count-internship",
+      "count-tgqs",
+      "count-admin-managers",
+      "count-it-technical",
+      "count-oppy",
+      "count-marketing",
+      "count-unicorn",
+      "count-carrier"
+    ];
 
-const deptListEl = document.getElementById("dept-list");
-const searchInput = document.getElementById("dept-search");
-
-function renderDepartments(filter = "") {
-  deptListEl.innerHTML = "";
-  departmentsData
-    .filter((dept) => dept.name.toLowerCase().includes(filter.toLowerCase()))
-    .forEach((dept) => {
-      const card = document.createElement("div");
-      card.className = `dept-item ${dept.tag}`;
-      card.innerHTML = `
-            <span class="dept-color"></span>
-            <div class="dept-info">
-              <h3>${dept.name}</h3>
-              <p>Active: ${dept.employees.active} | Inactive: ${dept.employees.inactive}</p>
-            </div>
-          `;
-      card.addEventListener("click", () => openModal(dept));
-      deptListEl.appendChild(card);
+    deptIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = Math.floor(Math.random() * 50);
     });
 
-  updateStats();
-}
+    const rahyo = document.getElementById("rahyo-count");
+    const hhi = document.getElementById("hhi-count");
+    if (rahyo) rahyo.innerHTML = 10;
+    if (hhi) hhi.innerHTML = 15;
 
-function updateStats() {
-  const total = departmentsData.reduce(
-    (acc, dept) => acc + dept.employees.active + dept.employees.inactive,
-    0
-  );
-  const active = departmentsData.reduce(
-    (acc, dept) => acc + dept.employees.active,
-    0
-  );
-  const count = departmentsData.length;
+    // Dummy data
+    const departmentData = {
+      internship: [
+        { name: "John Doe", position: "Intern", email: "john@company.com" },
+        { name: "Jane Smith", position: "Intern", email: "jane@company.com" }
+      ],
+      tgqs: [{ name: "Alice", position: "Engineer", email: "alice@tgqs.com" }],
+      "admin-managers": [{ name: "Bob", position: "Manager", email: "bob@admin.com" }],
+      "it-technical": [{ name: "Techy", position: "IT Specialist", email: "techy@it.com" }],
+      oppy: [{ name: "Dan", position: "Driver", email: "dan@oppy.com" }],
+      marketing: [{ name: "Ella", position: "Lead", email: "ella@marketing.com" }],
+      unicorn: [{ name: "Steve", position: "Hair Stylist AI", email: "steve@unicorn.ai" }],
+      carrier: [{ name: "Carla", position: "Operator", email: "carla@carrier.com" }]
+    };
 
-  document.getElementById("total-employees").textContent = total;
-  document.getElementById("active-employees").textContent = active;
-  document.getElementById("departments").textContent = count;
-}
+    const organizationData = {
+      rahyo: [
+        { name: "Amir", position: "CEO", email: "amir@rahyo.com" },
+        { name: "Lana", position: "HR", email: "lana@rahyo.com" }
+      ],
+      hhi: [
+        { name: "Carlos", position: "Supervisor", email: "carlos@hhi.com" },
+        { name: "Nina", position: "Engineer", email: "nina@hhi.com" }
+      ]
+    };
 
-function openModal(dept) {
-  alert(`Open modal for: ${dept.name}`);
-  // Replace this with your real modal function
-}
+    function showModal(dataKey, title, source = "department") {
+      const modal = document.getElementById("departmentModal");
+      const modalTitle = document.getElementById("modalTitle");
+      const tableBody = document.getElementById("modalTableBody");
 
-// Render on load
-renderDepartments();
+      modalTitle.textContent = `${title} ${source === "department" ? "Department" : "Organization"}`;
+      tableBody.innerHTML = "";
 
-// Filter departments as user types
-searchInput.addEventListener("input", (e) => {
-  renderDepartments(e.target.value);
-});
+      const data = source === "department" ? departmentData[dataKey] : organizationData[dataKey];
+
+      (data || []).forEach((item) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.name}</td>
+          <td>${item.position}</td>
+          <td>${item.email}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      modal.classList.remove("hidden");
+    }
+
+
+    document.querySelectorAll(".dept-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        const spanId = card.querySelector("span").id;
+        const deptKey = spanId.replace("count-", "");
+        const deptLabel = card.querySelector(".label").textContent.trim();
+        showModal(deptKey, deptLabel, "department");
+      });
+    });
+
+
+    document.querySelectorAll(".stat-card-org").forEach((card) => {
+      card.addEventListener("click", () => {
+        const spanId = card.querySelector(".stat-counter").id;
+        const orgKey = spanId.replace("-count", ""); // "rahyo" or "hhi"
+        const orgLabel = card.querySelector(".stat-name").textContent.trim();
+        showModal(orgKey, orgLabel, "organization");
+      });
+    });
+
+
+    const closeModalBtn = document.querySelector(".close-btn");
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener("click", () => {
+        document.getElementById("departmentModal").classList.add("hidden");
+      });
+    }
+
+    document.getElementById("departmentModal").addEventListener("click", (e) => {
+      if (e.target.id === "departmentModal") {
+        document.getElementById("departmentModal").classList.add("hidden");
+      }
+    });
+  });

@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hyacinth - Employee</title>
-    <link rel="stylesheet" href="../../style/employee.css" />
 
-    <!-- DataTables CSS -->
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../style/employee.css" />
     <link
       rel="stylesheet"
       href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css"
@@ -20,19 +20,52 @@
       rel="stylesheet"
     />
 
-    <!-- jQuery -->
+    <!-- Scripts -->
+    <script type="module" src="../sidebar/sidebar.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      /* Basic modal styling */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 400px;
+        position: relative;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 18px;
+        cursor: pointer;
+        background: none;
+        border: none;
+      }
+    </style>
   </head>
 
   <body>
-    <main-sidebar> </main-sidebar>
+    <main-sidebar></main-sidebar>
 
     <div class="wrap-container">
-      <!-- Employee Header -->
       <div class="employee-header">
         <div class="header-title">
           <h1>Employee Details</h1>
@@ -45,7 +78,6 @@
         </div>
       </div>
 
-      <!-- Filter Buttons -->
 
       <div class="filter-buttons">
         <select id="filterDepartment">
@@ -53,14 +85,12 @@
           <option value="ADMIN">ADMIN</option>
           <option value="IT">IT</option>
           <option value="HR">HR</option>
-          <!-- Add more as needed -->
         </select>
 
         <select id="filterJob">
           <option value="">All Job Titles</option>
           <option value="HR Officer">HR Officer</option>
           <option value="Software Developer">Software Developer</option>
-          <!-- Add more as needed -->
         </select>
 
         <select id="filterStatus">
@@ -101,19 +131,19 @@
                   class="view-btn icon-btn view"
                   title="View"
                   onclick='showEmployeeDetails({
-              name: "Jane Doe",
-              dob: "1990-05-15",
-              address: "123 Main St",
-              phone: "09171234567",
-              email: "jane@example.com",
-              job: "HR Officer",
-              department: "ADMIN",
-              organization: "HHI",
-              statusType: "REGULAR",
-              hireDate: "2021-06-01",
-              referredBy: "John Doe",
-              status: "Active"
-            })'
+                    name: "Jane Doe",
+                    dob: "1990-05-15",
+                    address: "123 Main St",
+                    phone: "09171234567",
+                    email: "jane@example.com",
+                    job: "HR Officer",
+                    department: "ADMIN",
+                    organization: "HHI",
+                    statusType: "REGULAR",
+                    hireDate: "2021-06-01",
+                    referredBy: "John Doe",
+                    status: "Active"
+                  })'
                 >
                   <i class="fas fa-eye"></i>
                 </button>
@@ -130,60 +160,45 @@
       </div>
     </div>
 
-    <script>
-      $(document).ready(function () {});
-
-      const table = $("#employeeTable").DataTable();
-
-      $("#filterDepartment").on("change", function () {
-        table.column(3).search(this.value).draw(); // Department
-      });
-
-      $("#filterJob").on("change", function () {
-        table.column(2).search(this.value).draw(); // Job Title
-      });
-
-      $("#filterStatus").on("change", function () {
-        table.column(6).search(this.value).draw(); // Status
-      });
-
-      $("#filterHireDate").on("change", function () {
-        table.column(5).search(this.value).draw(); // Hire Date
-      });
-
-      // Modal functionality
-
-      const modal = document.getElementById("employeeModal");
-      const closeModalBtn = document.querySelector(".close-modal");
-
-      // Example: Attach this to a "View" button
-      function showEmployeeDetails(employee) {
-        document.getElementById("empName").textContent = employee.name;
-        document.getElementById("empDob").textContent = employee.dob;
-        document.getElementById("empAddress").textContent = employee.address;
-        document.getElementById("empPhone").textContent = employee.phone;
-        document.getElementById("empEmail").textContent = employee.email;
-        document.getElementById("empJob").textContent = employee.job;
-        document.getElementById("empDept").textContent = employee.department;
-        document.getElementById("empHire").textContent = employee.hireDate;
-        document.getElementById("empStatus").textContent = employee.status;
-
-        modal.style.display = "flex";
-      }
-
-      closeModalBtn.onclick = function () {
-        modal.style.display = "none";
-      };
-
-      window.onclick = function (event) {
-        if (event.target === modal) {
-          modal.style.display = "none";
-        }
-      };
-    </script>
+    <!-- Modal Structure -->
+    <div id="employeeModal" class="modal">
+      <div class="modal-content">
+        <button class="close-modal">&times;</button>
+        <h3>Employee Details</h3>
+        <p><strong>Name:</strong> <span id="empName"></span></p>
+        <p><strong>DOB:</strong> <span id="empDob"></span></p>
+        <p><strong>Address:</strong> <span id="empAddress"></span></p>
+        <p><strong>Phone:</strong> <span id="empPhone"></span></p>
+        <p><strong>Email:</strong> <span id="empEmail"></span></p>
+        <p><strong>Job Title:</strong> <span id="empJob"></span></p>
+        <p><strong>Department:</strong> <span id="empDept"></span></p>
+        <p><strong>Hire Date:</strong> <span id="empHire"></span></p>
+        <p><strong>Status:</strong> <span id="empStatus"></span></p>
+      </div>
+    </div>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
+        const table = $("#employeeTable").DataTable();
+
+        // Filters
+        $("#filterDepartment").on("change", function () {
+          table.column(3).search(this.value).draw();
+        });
+
+        $("#filterJob").on("change", function () {
+          table.column(2).search(this.value).draw();
+        });
+
+        $("#filterStatus").on("change", function () {
+          table.column(6).search(this.value).draw();
+        });
+
+        $("#filterHireDate").on("change", function () {
+          table.column(5).search(this.value).draw();
+        });
+
+        // Delete button confirmation
         document.querySelectorAll(".delete-btn").forEach((button) => {
           button.addEventListener("click", function () {
             const ItemId = this.getAttribute("data-id");
@@ -191,13 +206,11 @@
             Swal.fire({
               title: "Are you Sure?",
               text: "This can't be undone!",
-
               icon: "warning",
-
               showCancelButton: true,
               confirmButtonColor: "#e3342f",
               cancelButtonColor: "#6c757d",
-              confirmButtonText: "Yes,please delete it!",
+              confirmButtonText: "Yes, please delete it!",
             }).then((result) => {
               if (result.isConfirmed) {
                 window.location.href = `delete.php?id=${ItemId}`;
@@ -205,9 +218,35 @@
             });
           });
         });
+
+        // Modal
+        const modal = document.getElementById("employeeModal");
+        const closeModalBtn = document.querySelector(".close-modal");
+
+        window.showEmployeeDetails = function (employee) {
+          document.getElementById("empName").textContent = employee.name;
+          document.getElementById("empDob").textContent = employee.dob;
+          document.getElementById("empAddress").textContent = employee.address;
+          document.getElementById("empPhone").textContent = employee.phone;
+          document.getElementById("empEmail").textContent = employee.email;
+          document.getElementById("empJob").textContent = employee.job;
+          document.getElementById("empDept").textContent = employee.department;
+          document.getElementById("empHire").textContent = employee.hireDate;
+          document.getElementById("empStatus").textContent = employee.status;
+
+          modal.style.display = "flex";
+        };
+
+        closeModalBtn.onclick = function () {
+          modal.style.display = "none";
+        };
+
+        window.onclick = function (event) {
+          if (event.target === modal) {
+            modal.style.display = "none";
+          }
+        };
       });
     </script>
-
-    <script src="../sidebar/sidebar.js"></script>
   </body>
 </html>
