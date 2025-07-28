@@ -32,10 +32,10 @@ window.register = function () {
     .then(async (userCredential) => {
       const user = userCredential.user;
 
-      // Set the display name in auth profile
+
       await updateProfile(user, { displayName: name });
 
-      // Save user data to Firestore
+
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         name: name,
