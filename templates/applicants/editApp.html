@@ -1,0 +1,127 @@
+<div id="editApplicantModal" class="form-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <i class="fas fa-user-edit"></i> Edit Applicant
+        </h2>
+        <button class="close-modal">&times;</button>
+      </div>
+  
+      <div class="modal-body">
+        <form id="editApplicantForm">
+          <div class="form-section">
+            <h3 class="section-title">Personal Information</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="editFirstName">First Name</label>
+                <input type="text" id="editFirstName" name="firstName" required>
+              </div>
+              <div class="form-group">
+                <label for="editLastName">Last Name</label>
+                <input type="text" id="editLastName" name="lastName" required>
+              </div>
+              <div class="form-group">
+                <label for="editDob">Date of Birth</label>
+                <input type="date" id="editDob" name="dob" required>
+              </div>
+              <div class="form-group">
+                <label for="editAddress">Address</label>
+                <input type="text" id="editAddress" name="address" required>
+              </div>
+              <div class="form-group">
+                <label for="editPhone">Contact Number</label>
+                <input type="tel" id="editPhone" name="phone" required>
+              </div>
+              <div class="form-group">
+                <label for="editEmail">Email</label>
+                <input type="email" id="editEmail" name="email" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="section-title">Educational Background</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="editDegree">Degree/Course</label>
+                <input type="text" id="editDegree" name="degree" placeholder="e.g., BS Computer Science" required>
+              </div>
+              <div class="form-group">
+                <label for="editSchool">School/University</label>
+                <input type="text" id="editSchool" name="school" placeholder="Name of institution">
+              </div>
+              <div class="form-group">
+                <label for="editGraduationYear">Year Graduated</label>
+                <input type="number" id="editGraduationYear" name="graduationYear" min="1950" max="2030">
+              </div>
+            </div>
+          </div>
+  
+          <div class="form-section">
+            <h3 class="section-title">Application Details</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="editPosition">Position Applied</label>
+                <input type="text" id="editPosition" name="position" required>
+              </div>
+              <div class="form-group">
+                <label for="editSource">Source</label>
+                <select id="editSource" name="source" required>
+                  <option value="Website">Website</option>
+                  <option value="Referral">Referral</option>
+                  <option value="Job Board">Job Board</option>
+                  <option value="Social Media">Social Media</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="editAppliedDate">Applied Date</label>
+                <input type="date" id="editAppliedDate" name="appliedDate" required>
+              </div>
+              <div class="form-group">
+                <label for="editStatus">Status</label>
+                <select id="editStatus" name="status" required>
+                  <option value="New">New</option>
+                  <option value="Under Review">Under Review</option>
+                  <option value="Interview Scheduled">Interview Scheduled</option>
+                  <option value="Hired">Hired</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="editInitialInterview">Initial Interview Date</label>
+                <input type="date" id="editInitialInterview" name="initialInterview">
+              </div>
+              <div class="form-group">
+                <label for="editFinalInterview">Final Interview Date</label>
+                <input type="date" id="editFinalInterview" name="finalInterview">
+              </div>
+              <div class="form-group">
+                <label for="editNotes">Notes</label>
+                <textarea id="editNotes" name="notes" rows="3"></textarea>
+              </div>
+            </div>
+          </div>
+  
+          <div class="form-section">
+            <h3 class="section-title">Resume</h3>
+            <div class="file-upload-container">
+              <div class="file-preview" id="editResumePreview">No file selected</div>
+              <div class="file-upload-controls">
+                <input type="file" id="editResumeFile" name="resumeFile" accept=".pdf,.doc,.docx" class="file-upload-input">
+                <label for="editResumeFile" class="file-upload-label">
+                  <i class="fas fa-cloud-upload-alt"></i> Change Resume
+                </label>
+                <button type="button" class="btn-remove-file" id="editRemoveResumeBtn">Remove</button>
+              </div>
+            </div>
+          </div>
+  
+          <div class="modal-footer">
+            <button type="button" class="btn-cancel">Cancel</button>
+            <button type="submit" class="btn-submit">Update Applicant</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

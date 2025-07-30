@@ -1,0 +1,160 @@
+@import url(style.css);
+
+/* Slim, Minimal Sidebar */
+.sidebar {
+  width: 48px; /* Slightly slimmer */
+  background: #1e1e1e; /* Cleaner solid dark tone */
+  padding: 16px 8px;
+  height: calc(100vh - 40px);
+  margin: 20px 0 20px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+/* Logo Styling */
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.logo-container img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* Sidebar Links (icon only) */
+.sidebar a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px;
+  margin-bottom: 12px;
+  text-decoration: none;
+  border-radius: 12px;
+  color: white;
+  position: relative;
+  transition: background 0.2s ease;
+}
+
+.sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Center Icon */
+.material-symbols-outlined {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+/* Tooltip on Hover */
+.sidebar a::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #242424;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  margin-left: 8px;
+  font-size: 13px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.sidebar a:hover::after {
+  opacity: 1;
+}
+
+/* Logout Section */
+.logout-section {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 10px;
+}
+
+.logout-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #e74c3c;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 12px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.logout-link:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+}
+
+.logout-link .material-symbols-outlined {
+  font-size: 24px;
+  color: #e74c3c;
+}
+
+@media (max-width: 576px) {
+  .sidebar {
+    flex-direction: row;
+    width: 100%;
+    height: 56px;
+    margin: 0;
+    padding: 0 8px;
+    bottom: 0;
+    left: 0;
+    top: auto;
+    border-radius: 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+    justify-content: space-around;
+  }
+
+  .logo-container {
+    display: none;
+  }
+
+  .sidebar a {
+    margin: 0;
+    padding: 8px;
+    flex: 1;
+  }
+
+  .sidebar a::after {
+    display: none; /* Hide tooltip on mobile */
+  }
+
+  .logout-section {
+    margin-top: 0;
+    padding: 0;
+  }
+
+  .logout-link {
+    padding: 8px;
+  }
+
+  .logout-link .material-symbols-outlined {
+    font-size: 22px;
+  }
+}

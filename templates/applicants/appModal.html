@@ -1,0 +1,83 @@
+<div id="applicantModal" class="modal" style="display: none">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">
+        <svg class="icon-user" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
+            fill="currentColor" />
+          <path
+            d="M12 14C7.58172 14 4 17.5817 4 22H20C20 17.5817 16.4183 14 12 14Z"
+            fill="currentColor" />
+        </svg>
+        Applicant Profile
+      </h2>
+      <button class="close-modal" onclick="closeModal()">✖</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="info-section">
+        <h3 class="section-title">Personal Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Full Name</label>
+            <div class="info-value" id="appName">-</div>
+          </div>
+          <div class="info-item">
+            <label>Date of Birth</label>
+            <div class="info-value" id="appDob">-</div>
+          </div>
+          <div class="info-item">
+            <label>Address</label>
+            <div class="info-value" id="appAddress">-</div>
+          </div>
+          <div class="info-item">
+            <label>Contact</label>
+            <div class="info-value" id="appPhone">-</div>
+          </div>
+          <div class="info-item">
+            <label>Email</label>
+            <div class="info-value" id="appEmail">-</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h3 class="section-title">Application Details</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Position</label>
+            <div class="info-value" id="appPosition">-</div>
+          </div>
+          <div class="info-item">
+            <label>Source</label>
+            <div class="info-value" id="appSource">-</div>
+          </div>
+          <div class="info-item">
+            <label>Applied Date</label>
+            <div class="info-value" id="appApplied">-</div>
+          </div>
+          <div class="info-item">
+            <label>Status</label>
+            <div class="info-value" id="appStatus">-</div>
+          </div>
+          <div class="info-item">
+            <label>Notes</label>
+            <div class="info-value" id="appNotes">-</div>
+          </div>
+          <div class="info-item">
+            <label>Resume</label>
+            <div class="info-value">
+              <a href="#" id="appResume" target="_blank" style="display: none;">View Resume</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-print" onclick="window.print()">Print Profile</button>
+    </div>
+  </div>
+</div>

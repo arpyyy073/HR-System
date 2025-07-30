@@ -1,0 +1,97 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  background-image: linear-gradient(
+    to right,
+    #ffffff 0%,
+    #000000 50%,
+    #801100 100%
+  );
+
+  font-family: "Lexend", sans-serif;
+}
+
+.wrap-container {
+  margin-left: 70px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  padding: 16px 20px 20px 20px;
+  flex: 1;
+  border-style: solid;
+  background-color: #f8f8f8;
+  min-height: calc(100vh - 40px);
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+
+  /* Hide scrollbar for WebKit and others */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.wrap-container::-webkit-scrollbar {
+  display: none; 
+}
+
+
+
+.swal-custom-font {
+  font-family: 'Lexend', sans-serif !important;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.swal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.swal-text {
+  font-size: 1rem;
+  color: #555;
+}
+
+.swal-confirm, .swal-cancel {
+  font-family: 'Lexend', sans-serif !important;
+  font-weight: 500;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.95rem;
+  border-radius: 6px;
+}
+
+.top-btn{
+
+ 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+}
+
+.top-btn:hover {
+
+border: 1px solid black;  
+box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
+}

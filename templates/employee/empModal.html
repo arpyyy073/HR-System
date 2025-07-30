@@ -1,0 +1,96 @@
+
+<div id="employeeModal" class="modal" style="display: none">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">
+        <svg class="icon-user" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
+            fill="currentColor" />
+          <path
+            d="M12 14C7.58172 14 4 17.5817 4 22H20C20 17.5817 16.4183 14 12 14Z"
+            fill="currentColor" />
+        </svg>
+        Employee Profile
+      </h2>
+      <button class="close-modal" onclick="closeModal()">✖</button>
+    </div>
+
+    <div class="modal-body">
+    
+      <div class="employee-image-container">
+        <img src="/images/assets/arp.jfif" alt="Employee Photo" class="employee-photo" id="empPhoto">
+      </div>
+
+      <div class="info-section">
+        <h3 class="section-title">Personal Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Full Name</label>
+            <div class="info-value" id="empName">-</div>
+          </div>
+          <div class="info-item">
+            <label>Date of Birth</label>
+            <div class="info-value" id="empDob">-</div>
+          </div>
+          <div class="info-item">
+            <label>Address</label>
+            <div class="info-value" id="empAddress">-</div>
+          </div>
+          <div class="info-item">
+            <label>Contact</label>
+            <div class="info-value" id="empPhone">-</div>
+          </div>
+          <div class="info-item">
+            <label>Email</label>
+            <div class="info-value" id="empEmail">-</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h3 class="section-title">Employment Details</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Organization</label>
+            <div class="info-value" id="empOrg">-</div>
+          </div>
+          <div class="info-item">
+            <label>Department</label>
+            <div class="info-value" id="empDept">-</div>
+          </div>
+          <div class="info-item">
+            <label>Referred By</label>
+            <div class="info-value" id="empRefer">-</div>
+          </div>
+          <div class="info-item">
+            <label>Hired Date</label>
+            <div class="info-value" id="empHire">-</div>
+          </div>
+          <div class="info-item">
+            <label>Status</label>
+            <div class="info-value status-active" id="status"style="background-color:white; border:none">-</div>
+          </div>
+          <div class="info-item">
+            <label>Employment Status</label>
+            <div class="info-value" id="empstatus">Intern</div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-print" onclick="window.print()">Print Profile</button>
+    </div>
+  </div>
+</div>
+
+
+    
+<script>
+  
+
+
+
