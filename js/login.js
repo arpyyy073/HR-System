@@ -98,10 +98,10 @@ loginButton.innerText = "Logging in...";
 // Re-enable after login
 signInWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
-    // ...
+
   })
   .catch((error) => {
-    // ...
+
   })
   .finally(() => {
     loginButton.disabled = false;
