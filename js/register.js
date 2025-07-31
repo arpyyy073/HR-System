@@ -3,11 +3,7 @@ import {
   createUserWithEmailAndPassword,
   updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-  doc,
-  setDoc
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { app, db } from "./firebase-config.js";
+import { app } from "./firebase-config.js";
 
 
 const auth = getAuth(app);
@@ -32,16 +28,7 @@ window.register = function () {
     .then(async (userCredential) => {
       const user = userCredential.user;
 
-
       await updateProfile(user, { displayName: name });
-
-
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        name: name,
-        email: user.email,
-        createdAt: new Date()
-      });
 
       Swal.fire({
         icon: "success",

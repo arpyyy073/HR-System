@@ -28,11 +28,11 @@ class Sidebar extends HTMLElement {
     this.innerHTML = `
       <div class="sidebar">
         <div class="logo-container">
-          <img src="${basePath}/images/assets/logo.png" alt="Logo" />
+          <img src="${basePath}../../images/assets/logo.png" alt="Logo" />
         </div>
-        <a href="${basePath}/templates/dashboard/dashboard.html" data-label="Dashboard"><i class="fas fa-chart-line"></i></a>
-        <a href="${basePath}/templates/employee/employee.html" data-label="Employees"><i class="fas fa-users"></i></a>
-        <a href="${basePath}/templates/applicants/applicants.html" data-label="Applicants"><i class="fas fa-file-alt"></i></a>
+        <a href="${basePath}/HR-System/templates/dashboard/dashboard.html" data-label="Dashboard"><i class="fas fa-chart-line"></i></a>
+        <a href="${basePath}/HR-System/templates/employee/employee.html" data-label="Employees"><i class="fas fa-users"></i></a>
+        <a href="${basePath}/HR-System/templates/applicants/applicants.html" data-label="Applicants"><i class="fas fa-file-alt"></i></a>
         <a href="#" data-label="Settings"><i class="fas fa-cog"></i></a>
         <div class="logout-section">
           <a href="#" class="logout-link" data-label="Logout"><i class="fas fa-sign-out-alt"></i></a>
@@ -84,7 +84,7 @@ class Sidebar extends HTMLElement {
                   history.pushState(null, "", location.href);
                 });
     
-                window.location.href = `${basePath}/templates/auth/login.html`;
+                window.location.href = `${basePath}/HR-System/templates/auth/login.html`;
               });
             })
             .catch((error) => {
