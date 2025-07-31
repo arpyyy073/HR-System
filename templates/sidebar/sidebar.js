@@ -17,14 +17,6 @@ class Sidebar extends HTMLElement {
       document.head.appendChild(link);
     }
 
-
-    //basepath ginamit para kahit saang e lagay ang system automatic niya read without hardcoding the 
-
-    //HR-SYSTEM which is ang root folder
-
-    // na gawa ko na din pala sa dashboard
-
-
     this.innerHTML = `
       <div class="sidebar">
         <div class="logo-container">

@@ -1,9 +1,9 @@
-import { db } from '/js/firebase-config.js';
+import { db } from './firebase-config.js';
 import { ref, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const cacheKey = 'employeeCountsCache';
-  const cacheExpiry = 15 * 60 * 1000; // 15 minutes cache validity
+  const cacheExpiry = 15 * 60 * 1000;
 
   const deptCounters = {
     "count-internship": 0,
