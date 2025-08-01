@@ -1,83 +1,111 @@
-<div id="applicantModal" class="modal" style="display: none">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">
-        <svg class="icon-user" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
-            fill="currentColor" />
-          <path
-            d="M12 14C7.58172 14 4 17.5817 4 22H20C20 17.5817 16.4183 14 12 14Z"
-            fill="currentColor" />
-        </svg>
-        Applicant Profile
-      </h2>
-      <button class="close-modal" onclick="closeModal()">✖</button>
-    </div>
-
-    <div class="modal-body">
-      <div class="info-section">
-        <h3 class="section-title">Personal Information</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <label>Full Name</label>
-            <div class="info-value" id="appName">-</div>
-          </div>
-          <div class="info-item">
-            <label>Date of Birth</label>
-            <div class="info-value" id="appDob">-</div>
-          </div>
-          <div class="info-item">
-            <label>Address</label>
-            <div class="info-value" id="appAddress">-</div>
-          </div>
-          <div class="info-item">
-            <label>Contact</label>
-            <div class="info-value" id="appPhone">-</div>
-          </div>
-          <div class="info-item">
-            <label>Email</label>
-            <div class="info-value" id="appEmail">-</div>
-          </div>
+<div id="applicantModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Applicant Profile</h2>
+            <button class="close-modal" onclick="closeModal()">✖</button>
         </div>
-      </div>
 
-      <div class="info-section">
-        <h3 class="section-title">Application Details</h3>
-        <div class="info-grid">
-          <div class="info-item">
-            <label>Position</label>
-            <div class="info-value" id="appPosition">-</div>
-          </div>
-          <div class="info-item">
-            <label>Source</label>
-            <div class="info-value" id="appSource">-</div>
-          </div>
-          <div class="info-item">
-            <label>Applied Date</label>
-            <div class="info-value" id="appApplied">-</div>
-          </div>
-          <div class="info-item">
-            <label>Status</label>
-            <div class="info-value" id="appStatus">-</div>
-          </div>
-          <div class="info-item">
-            <label>Notes</label>
-            <div class="info-value" id="appNotes">-</div>
-          </div>
-          <div class="info-item">
-            <label>Resume</label>
-            <div class="info-value">
-              <a href="#" id="appResume" target="_blank" style="display: none;">View Resume</a>
+
+            <!-- Personal Information -->
+            <div class="info-section">
+                <h3 class="section-title">Personal Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Full Name</label>
+                        <div class="info-value" id="appName">Sarah Johnson</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Date of Birth</label>
+                        <div class="info-value" id="appDob">March 15, 1995</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Address</label>
+                        <div class="info-value" id="appAddress">123 Main Street, Iligan City, Northern Mindanao</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Contact Number</label>
+                        <div class="info-value" id="appPhone">+63 912 345 6789</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Email Address</label>
+                        <div class="info-value" id="appEmail">sarah.johnson@email.com</div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="modal-footer">
-      <button class="btn-print" onclick="window.print()">Print Profile</button>
+            <!-- Educational Background -->
+            <div class="info-section">
+                <h3 class="section-title">Educational Background</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Degree/Course</label>
+                        <div class="info-value" id="appDegree">BS Computer Science</div>
+                    </div>
+                    <div class="info-item">
+                        <label>School/University</label>
+                        <div class="info-value" id="appSchool">University of the Philippines</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Details -->
+            <div class="info-section">
+                <h3 class="section-title">Application Details</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Position Applied</label>
+                        <div class="info-value" id="appPosition">Senior Software Developer</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Application Source</label>
+                        <div class="info-value" id="appSource">Online Job Portal</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Application Date</label>
+                        <div class="info-value" id="appApplied">July 20, 2025</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Current Status</label>
+                        <div class="info-value status-interview-scheduled" id="appStatus">Interview Scheduled</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Initial Interview</label>
+                        <div class="info-value" id="appInitialInterview">July 25, 2025</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Final Interview</label>
+                        <div class="info-value" id="appFinalInterview">Pending</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="info-section">
+                <h3 class="section-title">Additional Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Notes</label>
+                        <div class="info-value" id="appNotes">Excellent technical skills demonstrated in portfolio. Strong communication skills during initial screening call. Available to start within 2 weeks.</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Experience Level</label>
+                        <div class="info-value" id="appExperience">5+ years</div>
+                    </div>
+                    <div class="info-item">
+                        <label>Expected Salary</label>
+                        <div class="info-value" id="appSalary">₱80,000 - ₱100,000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <a href="#" class="btn-resume" id="appResumeBtn">
+                <i class="fas fa-file-pdf"></i> View Resume
+            </a>
+            <button class="btn-print" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Profile
+            </button>
+        </div>
     </div>
-  </div>
 </div>

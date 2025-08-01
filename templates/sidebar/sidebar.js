@@ -1,38 +1,31 @@
 // sidebar.js
 import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { app } from "../../js/firebase-config.js";
+import { app } from "/js/firebase-config.js";
 
 class Sidebar extends HTMLElement {
   connectedCallback() {
- 
-    const basePath = window.location.pathname.includes("/HR-System-july-29-2025-jd-2/") ? "/HR-System-july-29-2025-jd-2" : "";
+    // For Firebase Hosting, we'll use absolute paths from root
+    const basePath = '';
 
-   
+    // Set favicon
     const existingFavicon = document.querySelector("link[rel~='icon']");
     if (!existingFavicon) {
       const link = document.createElement("link");
       link.rel = "icon";
-      link.href = `${basePath}/images/assets/logo.png`;
+      link.href = "/images/assets/logo.png";
       link.type = "image/png";
       document.head.appendChild(link);
     }
 
-
-    //basepath ginamit para kahit saang e lagay ang system automatic niya read without hardcoding the 
-
-    //HR-SYSTEM which is ang root folder
-
-    // na gawa ko na din pala sa dashboard
-
-
     this.innerHTML = `
       <div class="sidebar">
         <div class="logo-container">
-          <img src="${basePath}/images/assets/logo.png" alt="Logo" />
+          <img src="/images/assets/logo.png" alt="Logo" />
         </div>
-        <a href="${basePath}/templates/dashboard/dashboard.html" data-label="Dashboard"><i class="fas fa-chart-line"></i></a>
-        <a href="${basePath}/templates/employee/employee.html" data-label="Employees"><i class="fas fa-users"></i></a>
-        <a href="${basePath}/templates/applicants/applicants.html" data-label="Applicants"><i class="fas fa-file-alt"></i></a>
+        <a href="../dashboard/dashboard.html" data-label="Dashboard"><i class="fas fa-chart-line"></i></a>
+        <a href="../employee/employee.html" data-label="Employees"><i class="fas fa-users"></i></a>
+        <a href="../applicants/applicants.html" data-label="Applicants"><i class="fas fa-file-alt"></i></a>
+        <a href="../users/users.html" data-label="Users"><i class="fas fa-user-shield"></i></a>
         <a href="#" data-label="Settings"><i class="fas fa-cog"></i></a>
         <div class="logout-section">
           <a href="#" class="logout-link" data-label="Logout"><i class="fas fa-sign-out-alt"></i></a>
@@ -40,7 +33,6 @@ class Sidebar extends HTMLElement {
       </div>
     `;
 
-   
     const logoutBtn = this.querySelector(".logout-link");
 
     logoutBtn.addEventListener("click", (e) => {
@@ -84,7 +76,7 @@ class Sidebar extends HTMLElement {
                   history.pushState(null, "", location.href);
                 });
     
-                window.location.href = `${basePath}/templates/auth/login.html`;
+                window.location.href = "/login.html";
               });
             })
             .catch((error) => {
@@ -104,7 +96,6 @@ class Sidebar extends HTMLElement {
         }
       });
     });
-    
   }
 }
 

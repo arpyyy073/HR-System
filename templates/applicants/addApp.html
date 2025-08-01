@@ -1,128 +1,123 @@
-<div id="addApplicantModal" class="form-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">
-          <i class="fas fa-user-plus"></i> Add New Applicant
-        </h2>
-        <button class="close-modal">&times;</button>
-      </div>
-  
-      <div class="modal-body">
-        <form id="addApplicantForm">
-          <div class="form-section">
-            <h3 class="section-title">Personal Information</h3>
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="firstName">First Name</label>
-                <input type="text" id="firstName" name="firstName" required>
-              </div>
-              <div class="form-group">
-                <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" name="lastName" required>
-              </div>
-              <div class="form-group">
-                <label for="dob">Date of Birth</label>
-                <input type="date" id="dob" name="dob" required>
-              </div>
-              <div class="form-group">
-                <label for="address">Address</label>
-                <input type="text" id="address" name="address" required>
-              </div>
-              <div class="form-group">
-                <label for="phone">Contact Number</label>
-                <input type="tel" id="phone" name="phone" required>
-              </div>
-              <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-              </div>
-            </div>
-          </div>
+<div class="modal-header">
+  <h2 class="modal-title">
+    <svg class="icon-user" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="currentColor"/>
+      <path d="M12 14C7.58172 14 4 17.5817 4 22H20C20 17.5817 16.4183 14 12 14Z" fill="currentColor"/>
+    </svg>
+    Add New Applicant
+  </h2>
+  <button class="close-modal">&times;</button>
+</div>
 
-          <div class="form-section">
-            <h3 class="section-title">Educational Background</h3>
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="degree">Degree/Course</label>
-                <input type="text" id="degree" name="degree" placeholder="e.g., BS Computer Science" required>
-              </div>
-              <div class="form-group">
-                <label for="school">School/University</label>
-                <input type="text" id="school" name="school" placeholder="Name of institution">
-              </div>
-              <div class="form-group">
-                <label for="graduationYear">Year Graduated</label>
-                <input type="number" id="graduationYear" name="graduationYear" min="1950" max="2030">
-              </div>
-            </div>
-          </div>
-  
-          <div class="form-section">
-            <h3 class="section-title">Application Details</h3>
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="position">Position Applied</label>
-                <input type="text" id="position" name="position" required>
-              </div>
-              <div class="form-group">
-                <label for="source">Source</label>
-                <select id="source" name="source" required>
-                  <option value="">Select Source</option>
-                  <option value="Website">Website</option>
-                  <option value="Referral">Referral</option>
-                  <option value="Job Board">Job Board</option>
-                  <option value="Social Media">Social Media</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="appliedDate">Applied Date</label>
-                <input type="date" id="appliedDate" name="appliedDate" required>
-              </div>
-              <div class="form-group">
-                <label for="status">Status</label>
-                <select id="status" name="status" required>
-                  <option value="New">New</option>
-                  <option value="Under Review">Under Review</option>
-                  <option value="Interview Scheduled">Interview Scheduled</option>
-                  <option value="Hired">Hired</option>
-                  <option value="Rejected">Rejected</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="initialInterview">Initial Interview Date</label>
-                <input type="date" id="initialInterview" name="initialInterview">
-              </div>
-              <div class="form-group">
-                <label for="finalInterview">Final Interview Date</label>
-                <input type="date" id="finalInterview" name="finalInterview">
-              </div>
-              <div class="form-group">
-                <label for="notes">Notes</label>
-                <textarea id="notes" name="notes" rows="3"></textarea>
-              </div>
-            </div>
-          </div>
-  
-          <div class="form-section">
-            <h3 class="section-title">Resume Upload</h3>
-            <div class="file-upload-container">
-              <div class="file-preview" id="resumePreview">No file selected</div>
-              <div class="file-upload-controls">
-                <input type="file" id="resumeFile" name="resumeFile" accept=".pdf,.doc,.docx" class="file-upload-input">
-                <label for="resumeFile" class="file-upload-label">
-                  <i class="fas fa-cloud-upload-alt"></i> Upload Resume
-                </label>
-                <button type="button" class="btn-remove-file" id="removeResumeBtn">Remove</button>
-              </div>
-            </div>
-          </div>
-  
-          <div class="modal-footer">
-            <button type="button" class="btn-cancel">Cancel</button>
-            <button type="submit" class="btn-submit">Add Applicant</button>
-          </div>
-        </form>
+<div class="modal-body">
+  <form id="addApplicantForm">
+    <div class="info-section">
+      <h3 class="section-title">Personal Information</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>First Name</label>
+          <div class="info-value"><input type="text" name="firstName" required></div>
+        </div>
+        <div class="info-item">
+          <label>Last Name</label>
+          <div class="info-value"><input type="text" name="lastName" required></div>
+        </div>
+        <div class="info-item">
+          <label>Date of Birth</label>
+          <div class="info-value"><input type="date" name="dob"></div>
+        </div>
+        <div class="info-item">
+          <label>Address</label>
+          <div class="info-value"><input type="text" name="address"></div>
+        </div>
+        <div class="info-item">
+          <label>Contact Number</label>
+          <div class="info-value"><input type="tel" name="phone" required></div>
+        </div>
+        <div class="info-item">
+          <label>Email Address</label>
+          <div class="info-value"><input type="email" name="email" required></div>
+        </div>
       </div>
     </div>
-  </div>
+
+    <div class="info-section">
+      <h3 class="section-title">Educational Background</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Degree/Course</label>
+          <div class="info-value"><input type="text" name="degree"></div>
+        </div>
+        <div class="info-item">
+          <label>School/University</label>
+          <div class="info-value"><input type="text" name="school"></div>
+        </div>
+        <div class="info-item">
+          <label>Year Graduated</label>
+          <div class="info-value"><input type="number" name="graduationYear"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h3 class="section-title">Application Details</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Position Applied</label>
+          <div class="info-value"><input type="text" name="position" required></div>
+        </div>
+        <div class="info-item">
+          <label>Application Source</label>
+          <div class="info-value">
+            <select name="source" required>
+              <option value="Website">Website</option>
+              <option value="Referral">Referral</option>
+              <option value="Job Board">Job Board</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="info-item">
+          <label>Application Date</label>
+          <div class="info-value"><input type="date" name="appliedDate" required></div>
+        </div>
+        <div class="info-item">
+          <label>Status</label>
+          <div class="info-value">
+            <select name="status" required>
+              <option value="New">New</option>
+              <option value="Under Review">Under Review</option>
+              <option value="Interview Scheduled">Interview Scheduled</option>
+              <option value="Hired">Hired</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
+        <div class="info-item">
+          <label>Initial Interview</label>
+          <div class="info-value"><input type="date" name="initialInterview"></div>
+        </div>
+        <div class="info-item">
+          <label>Final Interview</label>
+          <div class="info-value"><input type="date" name="finalInterview"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h3 class="section-title">Resume</h3>
+      <div class="file-upload-container">
+        <input type="file" id="resumeFile" name="resumeFile" style="display: none;">
+        <label for="resumeFile" class="file-upload-label">
+          <i class="fas fa-cloud-upload-alt"></i> Upload Resume
+        </label>
+        <div id="resumePreview">No file selected</div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" onclick="closeModal('addApplicantModal')">Cancel</button>
+      <button type="submit" class="btn-submit">Add Applicant</button>
+    </div>
+  </form>
+</div>

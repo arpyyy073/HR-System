@@ -1,21 +1,19 @@
 import { db } from './firebase-config.js';
 import { 
-    ref, 
-    push, 
-    set, 
-    get, 
-    update, 
-    remove, 
-    onValue, 
-    off 
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    collection, 
+    addDoc, 
+    doc, 
+    getDoc, 
+    getDocs, 
+    updateDoc, 
+    deleteDoc, 
+    onSnapshot,
+    query
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // Global variables
 let employeesTable;
 let employeesData = {};
-
-// Firebase Database References
-const employeesRef = ref(db, 'employees');
 
 // Date formatting utility functions
 function formatDateToMMDDYYYY(dateString) {
@@ -63,11 +61,13 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
     loadEmployeesFromFirebase();
 });
-
-// Load employees from Firebase Realtime Database
 function loadEmployeesFromFirebase() {
-    onValue(employeesRef, (snapshot) => {
-        employeesData = snapshot.val() || {};
+    const q = query(collection(db, 'employees'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        employeesData = {};
+        querySnapshot.forEach((doc) => {
+            employeesData[doc.id] = doc.data();
+        });
         populateEmployeeTable();
     }, (error) => {
         console.error('Error loading employees:', error);
@@ -77,106 +77,47 @@ function loadEmployeesFromFirebase() {
             text: 'Failed to load employees from database'
         });
     });
+    
+    return unsubscribe;
 }
 
-// Add new employee to Firebase
+// Add new employee to Firestore
 async function addEmployeeToFirebase(employeeData) {
     try {
-        const newEmployeeRef = push(employeesRef);
-        
-        // Format dates before saving
-        const formattedData = {
+        const docRef = await addDoc(collection(db, 'employees'), {
             ...employeeData,
-            dob: formatDateToMMDDYYYY(employeeData.dob),
-            hireDate: formatDateToMMDDYYYY(employeeData.hireDate),
-            id: newEmployeeRef.key,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
-        };
-        
-        await set(newEmployeeRef, formattedData);
-        
-        Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: 'Employee added successfully',
-            timer: 2000,
-            showConfirmButton: false
         });
-        
-        closeAddEmployeeModal();
-        return newEmployeeRef.key;
+        return docRef.id;
     } catch (error) {
         console.error('Error adding employee:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Failed to add employee'
-        });
         throw error;
     }
 }
 
-// Update employee in Firebase
+// Update employee in Firestore
 async function updateEmployeeInFirebase(employeeId, employeeData) {
     try {
-        const employeeRef = ref(db, `employees/${employeeId}`);
-        
-        // Format dates before updating
-        const formattedData = {
+        await updateDoc(doc(db, 'employees', employeeId), {
             ...employeeData,
-            dob: formatDateToMMDDYYYY(employeeData.dob),
-            hireDate: formatDateToMMDDYYYY(employeeData.hireDate),
             updatedAt: new Date().toISOString()
-        };
-        
-        await update(employeeRef, formattedData);
-        
-        Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: 'Employee updated successfully',
-            timer: 2000,
-            showConfirmButton: false
         });
-        
-        closeEditEmployeeModal();
     } catch (error) {
         console.error('Error updating employee:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Failed to update employee'
-        });
         throw error;
     }
 }
 
-// Delete employee from Firebase
+// Delete employee from Firestore
 async function deleteEmployeeFromFirebase(employeeId) {
     try {
-        const employeeRef = ref(db, `employees/${employeeId}`);
-        await remove(employeeRef);
-        
-        Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: 'Employee has been deleted successfully',
-            timer: 2000,
-            showConfirmButton: false
-        });
+        await deleteDoc(doc(db, 'employees', employeeId));
     } catch (error) {
         console.error('Error deleting employee:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Failed to delete employee'
-        });
         throw error;
     }
 }
-
-// Populate DataTable with Firebase data
 function populateEmployeeTable() {
     if (employeesTable) {
         employeesTable.clear();

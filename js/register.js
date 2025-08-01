@@ -3,14 +3,22 @@ import {
   createUserWithEmailAndPassword,
   updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-  doc,
-  setDoc
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { app, db } from "./firebase-config.js";
-
+import { app } from "./firebase-config.js";
 
 const auth = getAuth(app);
+
+// Toastify helper function
+function showToast(message, color = "#333", duration = 3000) {
+  Toastify({
+    text: message,
+    duration: duration,
+    close: true,
+    gravity: "top",
+    position: "right",
+    backgroundColor: color,
+    stopOnFocus: true
+  }).showToast();
+}
 
 window.register = function () {
   const name = document.querySelectorAll("input")[0].value.trim();
@@ -19,42 +27,36 @@ window.register = function () {
   const confirmPassword = document.querySelectorAll("input")[3].value;
 
   if (!name || !email || !password || !confirmPassword) {
-    Swal.fire("Missing Fields", "Please fill in all fields.", "warning");
+    showToast("Please fill in all fields.", "#f39c12");
     return false;
   }
 
   if (password !== confirmPassword) {
-    Swal.fire("Password Mismatch", "Passwords do not match.", "error");
+    showToast("Passwords do not match.", "#e74c3c");
     return false;
   }
 
   createUserWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
       const user = userCredential.user;
-
-
       await updateProfile(user, { displayName: name });
 
-
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        name: name,
-        email: user.email,
-        createdAt: new Date()
-      });
-
-      Swal.fire({
-        icon: "success",
-        title: "Registration Successful",
-        text: "You can now log in.",
-        timer: 2000,
-        showConfirmButton: false
-      }).then(() => {
+      showToast("Registration successful! Redirecting...", "#27ae60", 2000);
+      setTimeout(() => {
         window.location.href = "login.html";
-      });
+      }, 2000);
     })
     .catch((error) => {
-      Swal.fire("Error", error.message, "error");
+      let message = error.message;
+      if (error.code === "auth/email-already-in-use") {
+        message = "Email already in use.";
+      } else if (error.code === "auth/invalid-email") {
+        message = "Invalid email format.";
+      } else if (error.code === "auth/weak-password") {
+        message = "Password should be at least 6 characters.";
+      }
+
+      showToast(message, "#e74c3c");
     });
 
   return false;
