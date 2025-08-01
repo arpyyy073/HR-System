@@ -54,7 +54,7 @@
   color: #a31414;
 }
 
-/* Stats Section Container */
+
 
 .stats-container {
   display: flex;
@@ -69,7 +69,7 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
 }
 
-/* Stat Cards (Total Employees)*/
+
 
 .stat-card {
   width: 160px;
@@ -152,7 +152,7 @@
   margin-top: 5px;
 }
 
-/* Organization Cards */
+
 
 .org-container {
   width: 200px;
@@ -196,7 +196,7 @@
   box-shadow: 0 4px 10px rgba(128, 17, 0, 0.15);
 }
 
-/* Departments Section */
+
 
 .department-container {
   flex-grow: 1;
@@ -222,7 +222,7 @@
   gap: 12px;
 }
 
-/* Department Cards Container */
+
 
 .departments-grid {
   display: grid;
@@ -420,54 +420,272 @@
     font-size: 18px;
   }
 }
- /* Modal Styles */
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-    }
 
-    .modal.hidden {
-      display: none;
-    }
 
-    .modal-content {
-      background: #fff;
-      padding: 20px 30px;
-      border-radius: 10px;
-      width: 80%;
-      max-width: 800px;
-      position: relative;
-    }
 
-    .close-btn {
-      position: absolute;
-      top: 12px;
-      right: 16px;
-      font-size: 24px;
-      cursor: pointer;
-    }
+/* Modal Container - Consistent Positioning */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  backdrop-filter: blur(2px);
+}
 
-    .dept-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
+.modal.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
 
-    .dept-table th,
-    .dept-table td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: left;
-    }
+.modal:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+}
 
-    .dept-table th {
-      background-color: #f4f4f4;
-    }
+/* Modal Content - Fixed Dimensions */
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  width: min(90%, 900px);
+  height: min(80vh, 700px);
+  min-height: 200px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  position: relative;
+  margin: auto;
+}
+
+.modal:not(.hidden) .modal-content {
+  transform: translateY(0);
+}
+
+/* Modal Header - Fixed Height */
+.modal-header {
+  padding: 18px 25px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  min-height: 60px;
+}
+
+.modal-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #801100;
+  z-index: -1;
+}
+
+/* Department-specific header colors */
+.modal-header[data-dept="internship"]::before { background: #c62828; }
+.modal-header[data-dept="tgqs"]::before { background: #1565c0; }
+.modal-header[data-dept="admin-managers"]::before { background: #2e7d32; }
+.modal-header[data-dept="it-technical"]::before { background: #6a1b9a; }
+.modal-header[data-dept="oppy"]::before { background: #ef6c00; }
+.modal-header[data-dept="marketing"]::before { background: #00897b; }
+.modal-header[data-dept="unicorn"]::before { background: #ad1457; }
+.modal-header[data-dept="carrier"]::before { background: #5d4037; }
+
+/* Organization-specific header colors */
+.modal-header[data-org="rahyo"]::before { background: #801100; }
+.modal-header[data-org="hhi"]::before { background: #0d47a1; }
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.close-btn {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 5px 10px;
+  line-height: 1;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.05);
+}
+
+
+.modal-body {
+  padding: 0;
+  flex: 1;
+  overflow-y:auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.table-container {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+  min-height: 100px;
+}
+
+/* Table Styles */
+.dept-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.95rem;
+  table-layout: fixed;
+}
+
+.dept-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.dept-table th {
+  background-color: #f8f8f8;
+  padding: 12px 20px;
+  text-align: left;
+  font-weight: 600;
+  color: #555;
+  border-bottom: 2px solid #eee;
+  position: sticky;
+  top: 0;
+}
+
+.dept-table td {
+  padding: 12px 20px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+  word-wrap: break-word;
+}
+
+.dept-table tr:last-child td {
+  border-bottom: none;
+}
+
+.dept-table tr:hover td {
+  background-color: #f9f9f9;
+}
+
+/* Empty State */
+.empty-state {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+  color: #666;
+  padding: 20px;
+}
+
+.empty-state.hidden {
+  display: none;
+}
+
+/* Loading State */
+.loading-state {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+  color: #666;
+  padding: 20px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .modal {
+    padding: 30px 15px;
+  }
+  
+  .modal-content {
+    width: min(95%, 600px);
+    height: min(85vh, 600px);
+  }
+  
+  .dept-table th, 
+  .dept-table td {
+    padding: 10px 15px;
+  }
+  
+  .modal-header {
+    padding: 15px 20px;
+    min-height: 55px;
+  }
+  
+  .modal-header h2 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal {
+    padding: 20px 10px;
+  }
+  
+  .modal-content {
+    width: 95%;
+    height: min(90vh, 500px);
+    border-radius: 8px;
+  }
+  
+  .dept-table {
+    font-size: 0.85rem;
+  }
+  
+  .dept-table th, 
+  .dept-table td {
+    padding: 8px 12px;
+  }
+  
+  .modal-header {
+    padding: 12px 15px;
+    min-height: 50px;
+  }
+  
+  .modal-header h2 {
+    font-size: 1.1rem;
+  }
+  
+  .close-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 1.3rem;
+  }
+}

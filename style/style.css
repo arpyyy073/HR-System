@@ -1,6 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap");
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css");
 
+
+:root {
+  --primary: #9a1100;
+  --primary-light: #c41500;
+  --primary-dark: #6a0e00;
+  --text-dark: #2a2a2a;
+  --text-medium: #4a4a4a;
+  --text-light: #6c757d;
+  --border-color: #d0d0d0;
+  --bg-light: #f8f9fa;
+  --bg-dark: #e8ebf0;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -21,6 +34,7 @@ body {
   font-family: "Lexend", sans-serif;
 }
 
+
 .wrap-container {
   margin-left: 70px;
   margin-top: 20px;
@@ -35,9 +49,9 @@ body {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
   overflow-y: auto;
 
-  /* Hide scrollbar for WebKit and others */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
+
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
 }
 
 .wrap-container::-webkit-scrollbar {
@@ -71,9 +85,7 @@ body {
   border-radius: 6px;
 }
 
-.top-btn{
-
- 
+.top-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -81,17 +93,59 @@ body {
   background-color: #fff;
   color: #333;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600; 
   border: 1px solid #e0e0e0;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
   transition: all 0.2s ease;
   cursor: pointer;
+  position: relative; 
+  overflow: hidden; 
 
+}
+
+.top-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #801100; 
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
 }
 
 .top-btn:hover {
 
-border: 1px solid black;  
-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.top-btn:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+
+.top-btn i {
+  font-size: 13px;
+  transition: transform 0.2s ease;
+}
+
+.top-btn:hover i {
+  transform: scale(1.1);
+}
+
+.geometric-pattern {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 15V45L30 60L0 45V15L30 0Z' fill='none' stroke='rgba(154,17,0,0.08)' stroke-width='0.8'/%3E%3Cpath d='M30 0V30M0 15V45M60 15V45' fill='none' stroke='rgba(154,17,0,0.05)' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+  opacity: 0.7;
+  z-index: 0;
+  animation: pan 40s linear infinite;
 }

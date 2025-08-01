@@ -15,6 +15,7 @@
 
 <body>
   <main-sidebar></main-sidebar>
+  
   <div class="wrap-container">
 
     <div class="dashboard-header">
@@ -107,23 +108,27 @@
     </div>
   </div>
 
-<div id="departmentModal" class="modal hidden">
-  <div class="modal-content">
-    <span class="close-btn">&times;</span>
-    <h2 id="modalTitle">Details</h2>
-    <table class="dept-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-        </tr>
-      </thead>
-      <tbody id="modalTableBody">
-      
-      </tbody>
-    </table>
+  <div id="departmentModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Department Employees</h2>
+        <button class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <table class="dept-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody id="modalTableBody">
+  
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
-</div>
 
 
   <script type="module" src="../sidebar/sidebar.js"></script>

@@ -118,6 +118,24 @@ async function deleteEmployeeFromFirebase(employeeId) {
         throw error;
     }
 }
+
+function formatHireDate(dateString) {
+    if (!dateString) return 'N/A';
+  
+    const date = new Date(dateString);
+    if (isNaN(date)) return 'Invalid Date';
+  
+    const options = { month: 'long' }; // For full month name
+    const month = new Intl.DateTimeFormat('en-US', options).format(date);
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+  
+    return `${month}-${day}-${year}`;
+  }
+  
+  // Usage:
+  const formattedDate = formatHireDate(employee.hireDate);
+  
 function populateEmployeeTable() {
     if (employeesTable) {
         employeesTable.clear();

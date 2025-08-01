@@ -232,10 +232,42 @@ document.addEventListener("DOMContentLoaded", () => {
         const modal = document.getElementById("departmentModal");
         const modalTitle = document.getElementById("modalTitle");
         const tableBody = document.getElementById("modalTableBody");
-
+        const modalHeader = modal.querySelector('.modal-header');
+    
+        // Set modal title
         modalTitle.textContent = `${title} ${source === "department" ? "Department" : "Organization"}`;
         
-        // Show cached data immediately
+        // Set header color based on department/organization
+        if (source === "department") {
+            const deptColorMap = {
+                "internship": "internship",
+                "tgqs": "tgqs", 
+                "administration & managers": "admin-managers",
+                "admin & managers": "admin-managers",
+                "administration and managers": "admin-managers",
+                "it & technical": "it-technical",
+                "it and technical": "it-technical",
+                "information technology": "it-technical",
+                "oppy transport": "oppy",
+                "transport": "oppy",
+                "marketing": "marketing",
+                "unicornhair ai": "unicorn",
+                "unicorn ai": "unicorn",
+                "unicorn": "unicorn",
+                "carrier connection": "carrier",
+                "carrier": "carrier"
+            };
+            
+            const normalizedKey = normalizeString(dataKey);
+            const colorKey = deptColorMap[normalizedKey] || normalizedKey.split(' ')[0].toLowerCase();
+            modalHeader.setAttribute('data-dept', colorKey);
+            modalHeader.removeAttribute('data-org');
+        } else {
+            modalHeader.setAttribute('data-org', normalizeString(dataKey));
+            modalHeader.removeAttribute('data-dept');
+        }
+        
+ 
         const cachedFilter = source === "department" ? 'department' : 'org';
         const cachedResults = allEmployeesCache
             .filter(employee => 
@@ -245,20 +277,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 name: `${employee.firstName || ''} ${employee.lastName || ''}`.trim() || 'N/A',
                 email: employee.email || 'N/A'
             }));
-
+    
         if (cachedResults.length > 0) {
             renderEmployeeList(tableBody, cachedResults);
         } else {
             tableBody.innerHTML = "<tr><td colspan='3'><i class='fas fa-spinner fa-spin'></i> Loading...</td></tr>";
         }
-
+    
         modal.classList.remove("hidden");
-
-        // Fetch fresh data in background
+    
+       
         try {
             const employees = await fetchEmployeesByFilter(cachedFilter, dataKey);
             
-            // Only update if different from cached results
+           
             if (employees.length !== cachedResults.length || 
                 JSON.stringify(employees) !== JSON.stringify(cachedResults)) {
                 renderEmployeeList(tableBody, employees);
@@ -270,7 +302,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
-
     function renderEmployeeList(tableBody, employees) {
         tableBody.innerHTML = "";
         

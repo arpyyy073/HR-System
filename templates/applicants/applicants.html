@@ -18,6 +18,9 @@
       <div class="header-title">
         <h1>Applicants Overview</h1>
       </div>
+      <button id="toggleOverview" class="toggle-btn">
+        <i class="fas fa-eye-slash"></i> Hide Overview
+      </button>
     </div>
 
     <div class="applicants-container">
@@ -72,9 +75,7 @@
     <div class="data-table-container">
       <div class="table-header">
         <h2>Applicants List</h2>
-        <div class="search-container">
-          <input type="text" id="searchInput" placeholder="Search Applicants..." />
-        </div>
+       
         <div>
           <button class="top-btn" id="addApplicantBtn">
             <i class="fa-solid fa-user-plus"></i> Add Applicant
@@ -98,17 +99,7 @@
         <tbody></tbody>
       </table>
 
-      <div class="pagination">
-        <button class="prev-page" disabled>
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <span class="page-info">Page 1 of 1</span>
-        <button class="next-page" disabled>
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-    </div>
-  </div>
+      
 
   <div id="applicantModal" class="modal">
     <div class="modal-content">
@@ -134,5 +125,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script type="module" src="../sidebar/sidebar.js"></script>
   <script type="module" src="../../js/applicants.js"></script>
+
+
 </body>
 </html>

@@ -76,7 +76,7 @@ class Sidebar extends HTMLElement {
                   history.pushState(null, "", location.href);
                 });
     
-                window.location.href = "/login.html";
+                window.location.href = "/templates/auth/login.html";
               });
             })
             .catch((error) => {

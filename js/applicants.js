@@ -68,6 +68,20 @@ function initializeDataTable() {
   }
 
   applicantsTable = $('#applicantTable').DataTable({
+    language: {
+      paginate: {
+        first: "First",
+        last: "Last",
+        next: "Next ›",
+        previous: "‹ Prev"
+      },
+      lengthMenu: "Show _MENU_ applicants per page",
+      info: "Showing _START_ to _END_ of _TOTAL_ applicants",
+      infoEmpty: "No applicants to show",
+      infoFiltered: "(filtered from _MAX_ total applicants)",
+      zeroRecords: "No matching applicants found",
+      search: "Search Applicants:"
+    },
     dom: "<'top-wrapper'<'left-entries'l><'right-search'f>>" +
          "<'table-responsive'tr>" +
          "<'bottom-wrapper'<'left-info'i><'right-paging'p>>",
@@ -110,9 +124,7 @@ function initializeDataTable() {
     ]
   });
 
-  $('#searchInput').on('keyup', function() {
-    applicantsTable.search(this.value).draw();
-  });
+  
 }
 
 function initializeChart() {
@@ -829,3 +841,27 @@ function closeModal(modalId) {
 // Make functions available globally
 window.viewApplicant = viewApplicant;
 window.closeModal = closeModal;
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const toggleBtn = document.getElementById('toggleOverview');
+  const mainContainer = document.querySelector('.wrap-container');
+  
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function() {
+      mainContainer.classList.toggle('overview-hidden');
+      
+      
+      if (mainContainer.classList.contains('overview-hidden')) {
+        toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Show Overview';
+      } else {
+        toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Overview';
+      }
+      
+    
+      if (!mainContainer.classList.contains('overview-hidden') && applicantsChart) {
+     
+      }
+    });
+  }
+});
