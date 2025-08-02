@@ -1,0 +1,154 @@
+<div id="addEmployeeModal"  class="form-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <i class="fas fa-user-plus"></i> Add New Employee
+        </h2>
+        <button class="close-modal">&times;</button>
+      </div>
+  
+      <div class="modal-body">
+        <form id="addEmployeeForm">
+   
+          <div class="form-section">
+            <h3 class="section-title">Profile Picture</h3>
+            <div class="image-upload-container">
+              <div class="image-preview" id="imagePreview">
+<img src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Crect fill='%23ddd' width='150' height='150'%3E%3C/rect%3E%3Ctext fill='%23666' font-family='sans-serif' font-size='12' dy='.5em' text-anchor='middle'%3E150x150%3C/text%3E%3C/svg%3E" 
+     alt="Profile Preview" 
+     class="preview-image" 
+     id="previewImage">
+                     <div class="default-text">No image selected</div>
+              </div>
+              <div class="image-upload-controls">
+                <input type="file" id="profileImage" name="profileImage" accept="image/*" class="image-upload-input">
+                <label for="profileImage" class="image-upload-label">
+                  <i class="fas fa-cloud-upload-alt"></i> Choose Image
+                </label>
+                <button style="display: none;" type="button" class="btn-remove-image" id="removeImageBtn">Remove</button>
+              </div>
+            </div>
+          </div>
+  
+      
+          <div class="form-section">
+            <h3 class="section-title">Personal Information</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" required>
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" required>
+              </div>
+              <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob" required>
+              </div>
+              <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" required>
+              </div>
+              <div class="form-group">
+                <label for="phone">Contact Number</label>
+                <input type="tel" id="phone" name="phone" required>
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+              </div>
+            </div>
+          </div>
+  
+         
+          <div class="form-section">
+            <h3 class="section-title">Employment Details</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="org">Organization</label>
+                <select id="org" name="org" required>
+                  <option value="">Select Organization</option>
+                  <option value="RAHYO">RAHYO</option>
+                  <option value="HHI">HHI</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Department</label>
+                <div>
+                  <input type="checkbox" id="add_internship" name="department[]" value="Internship">
+                  <label for="add_internship">Internship</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="add_it" name="department[]" value="IT & Technical">
+                  <label for="add_it">IT & Technical</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="add_unicorn" name="department[]" value="UnicornHair AI">
+                  <label for="add_unicorn">UnicornHair AI</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="add_tgqs" name="department[]" value="TGQS">
+                  <label for="add_tgqs">TGQS</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="add_oppy" name="department[]" value="Oppy Transport">
+                  <label for="add_oppy">Oppy Transport</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="add_carrier" name="department[]" value="Carrier Connection">
+                  <label for="add_carrier">Carrier Connection</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="add_admin" name="department[]" value="Administration & Managers">
+                  <label for="add_admin">Administration & Managers</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="add_marketing" name="department[]" value="Marketing">
+                  <label for="add_marketing">Marketing</label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="refer">Referred By</label>
+                <input type="text" id="ref" name="ref" required>
+              </div>
+              <div class="form-group">
+               <label>Hired Date</label>
+<input type="date" name="hireddate" id="editHiredDate" />
+              </div>
+              <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                  <option value="">Select Status</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+               <div class="form-group">
+                <label for="empstatus">Employment Status</label>
+                <select id="empstatus" name="empstatus" required>
+                  <option value="">Select Employment Status</option>
+                  <option value="Intern">Intern</option>
+                  <option value="Probationary">Probationary</option>
+                  <option value="Regular">Regular</option>
+                </select>
+              </div>
+            </div>
+          </div>
+  
+          <div class="modal-footer">
+            <button type="button" class="btn-cancel">Cancel</button>
+            <button type="submit" class="btn-submit" name ="add_employee">Add Employee</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,230 @@
+@import url(style.css);
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lexend", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 25%),
+    radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 25%),
+    linear-gradient(135deg, #e0e0e0 0%, #cfcfcf 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(154, 17, 0, 0.08);
+  border-radius: 50%;
+  z-index: -1;
+  animation: float 18s ease-in-out infinite;
+  filter: blur(0.8px);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(25px, -25px) scale(1.05);
+    opacity: 1;
+  }
+}
+
+.register-container {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.93);
+  padding: clamp(25px, 5vw, 35px); 
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  z-index: 1;
+  margin: 20px 0;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.register-container img {
+  width: clamp(70px, 18vw, 90px); 
+  height: auto;
+  display: block;
+  margin: 0 auto clamp(6px, 1.5vw, 10px); 
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
+}
+
+.register-container h2 {
+  margin-top: 0;
+  text-align: center;
+  margin-bottom: clamp(12px, 3vw, 18px); 
+  font-size: clamp(18px, 4.5vw, 24px); 
+  color: var(--text-dark);
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.register-container h2 span {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.email-container, .password-container {
+  margin-bottom: clamp(10px, 2.5vw, 15px); 
+}
+
+.email-container p, .password-container p {
+  margin: 0;
+  font-size: clamp(13px, 3vw, 14px); 
+  color: var(--text-medium);
+  margin-bottom: clamp(4px, 1.5vw, 6px); 
+  font-weight: 500;
+}
+
+.email-container input, .password-container input {
+  width: 100%;
+  padding: clamp(10px, 2.5vw, 12px) clamp(12px, 3vw, 15px);
+  border: 2px solid var(--border-color);
+  border-radius: 8px; 
+  box-sizing: border-box;
+  font-size: clamp(13px, 3vw, 14px); 
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-dark);
+}
+
+.email-container input::placeholder, 
+.password-container input::placeholder {
+  color: var(--text-light);
+  opacity: 0.7;
+  font-size: clamp(12px, 3vw, 13px); 
+}
+
+.email-container input:focus, 
+.password-container input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(154, 17, 0, 0.15); 
+  background: white;
+}
+
+.button-container button {
+  background: linear-gradient(to right, var(--primary), var(--primary-dark));
+  color: white;
+  width: 100%;
+  padding: clamp(12px, 3vw, 14px); 
+  border: none;
+  border-radius: 8px; 
+  font-size: clamp(14px, 3.5vw, 15px); 
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  margin-top: clamp(6px, 2vw, 8px); 
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 10px rgba(154, 17, 0, 0.2); 
+}
+
+.button-container button:hover {
+  background: linear-gradient(to right, var(--primary-dark), var(--primary));
+  transform: translateY(-1px); 
+  box-shadow: 0 5px 15px rgba(154, 17, 0, 0.3);
+}
+
+.button-container button:active {
+  transform: translateY(0);
+}
+
+.button-container button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(255, 255, 255, 0.3) 48%,
+    rgba(255, 255, 255, 0.3) 52%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: shine 3s infinite;
+}
+
+.button-container p {
+  text-align: center;
+  margin-top: clamp(12px, 3vw, 16px); 
+  color: var(--text-light);
+  font-size: clamp(12px, 3vw, 13px); 
+}
+
+.button-container a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.button-container a:hover {
+  text-decoration: underline;
+  color: var(--primary-dark);
+}
+
+
+
+
+
+@keyframes shine {
+  0% { 
+    transform: translateX(-100%) rotate(30deg);
+    opacity: 0.6;
+  }
+  100% { 
+    transform: translateX(100%) rotate(30deg);
+    opacity: 0.9;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 15px;
+  }
+  .register-container {
+    padding: 20px 18px; 
+  }
+  .email-container input, 
+  .password-container input {
+    padding: 10px 12px; 
+  }
+}
+
+@media (max-width: 360px) {
+  .register-container {
+    padding: 18px 15px; 
+  }
+  .register-container h2 {
+    font-size: 16px; 
+  }
+}

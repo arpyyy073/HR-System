@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hyacinth - Applicants</title>
+    <link rel="stylesheet" href="../../style/applicant.css" />
+    <link rel="stylesheet" href="../../style/applicantmodal.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
+  </head>
+
+  <body>
+    <main-sidebar></main-sidebar>
+    <div class="wrap-container">
+      <div class="applicants-header">
+        <div class="header-title">
+          <h1>Applicants Overview</h1>
+        </div>
+        <button id="toggleOverview" class="toggle-btn">
+          <i class="fas fa-eye-slash"></i> Hide Overview
+        </button>
+      </div>
+
+      <div class="applicants-container">
+        <div class="total-applicants large">
+          <h3>Total Applicants</h3>
+          <div class="circle-container">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-counter">0</div>
+            <div class="stat-name">Applicants</div>
+          </div>
+        </div>
+
+        <div class="application-status">
+          <h3>Application Status</h3>
+          <div class="status-list">
+            <div class="status-item">
+              <span class="status-label">Passed</span
+              ><span class="status-count">0</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">In-progress</span
+              ><span class="status-count">0</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Rejected</span
+              ><span class="status-count">0</span>
+            </div>
+            <div class="status-item">
+              <span class="status-label">Callback</span
+              ><span class="status-count">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="application-source">
+          <h3>Application Source</h3>
+          <div class="source-list">
+            <div class="source-item">
+              <span class="source-label">Online Post</span
+              ><span class="source-count">0</span>
+            </div>
+            <div class="source-item">
+              <span class="source-label">Walk-in</span
+              ><span class="source-count">0</span>
+            </div>
+            <div class="source-item">
+              <span class="source-label">Referral</span
+              ><span class="source-count">0</span>
+            </div>
+            <div class="source-item" style="background-color: #e74c3c">
+              <span class="source-label">Job Fairs</span
+              ><span class="source-count">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="applicants-graph">
+          <h3>Applicants Overview</h3>
+          <div
+            class="chart-container"
+            style="position: relative; height: 300px; width: 100%"
+          >
+            <canvas id="applicantsChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="data-table-container">
+        <div class="table-header">
+          <h2>Applicants List</h2>
+          <div>
+            <button class="top-btn" id="addApplicantBtn">
+              <i class="fa-solid fa-user-plus"></i> Add Applicant
+            </button>
+          </div>
+        </div>
+
+        <table id="applicantTable" class="display">
+          <thead>
+            <tr>
+              <th>Applicant Name</th>
+              <th>Degree/Course</th>
+              <th>Source</th>
+              <th>Initial Interview</th>
+              <th>Final Interview</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div id="applicantModal" class="modal">
+        <div class="modal-content">
+          <div id="appModalContent"></div>
+        </div>
+      </div>
+
+      <div id="addApplicantModal" class="modal">
+        <div class="modal-content">
+          <div id="addAppContent"></div>
+        </div>
+      </div>
+
+      <div id="editApplicantModal" class="modal">
+        <div class="modal-content">
+          <div id="editAppContent"></div>
+        </div>
+      </div>
+
+      <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+      <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script type="module" src="../sidebar/sidebar.js"></script>
+      <script type="module" src="../../js/applicants.js"></script>
+    </div>
+  </body>
+</html>

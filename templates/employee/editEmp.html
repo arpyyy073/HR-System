@@ -1,0 +1,129 @@
+<div id="editEmployeeModal" class="form-modal" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <i class="fas fa-user-edit"></i> Edit Employee
+        </h2>
+        <button class="close-modal" id="closeEditEmployeeModal">&times;</button>
+      </div>
+  
+      <div class="modal-body">
+        <form id="editEmployeeForm">
+          <div class="form-section">
+            <h3 class="section-title">Personal Information</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="editFirstName">First Name</label>
+                <input type="text" id="editFirstName" name="firstName" required>
+              </div>
+              <div class="form-group">
+                <label for="editLastName">Last Name</label>
+                <input type="text" id="editLastName" name="lastName" required>
+              </div>
+              <div class="form-group">
+                <label for="editDob">Date of Birth</label>
+                <input type="date" id="editDob" name="dob" required>
+              </div>
+              <div class="form-group">
+                <label for="editAddress">Address</label>
+                <input type="text" id="editAddress" name="address" required>
+              </div>
+              <div class="form-group">
+                <label for="editPhone">Contact Number</label>
+                <input type="tel" id="editPhone" name="phone" required>
+              </div>
+              <div class="form-group">
+                <label for="editEmail">Email</label>
+                <input type="email" id="editEmail" name="email" required>
+              </div>
+            </div>
+          </div>
+  
+    
+          <div class="form-section">
+            <h3 class="section-title">Employment Details</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="editOrg">Organization</label>
+                <select id="editOrg" name="org" required>
+                  <option value="">Select Organization</option>
+                  <option value="RAHYO">RAHYO</option>
+                  <option value="HHI">HHI</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Department</label>
+                <div>
+                  <input type="checkbox" id="edit_internship" name="department[]" value="Internship">
+                  <label for="edit_internship">Internship</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_it" name="department[]" value="IT & Technical">
+                  <label for="edit_it">IT & Technical</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_unicorn" name="department[]" value="UnicornHair AI">
+                  <label for="edit_unicorn">UnicornHair AI</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_tgqs" name="department[]" value="TGQS">
+                  <label for="edit_tgqs">TGQS</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_oppy" name="department[]" value="Oppy Transport">
+                  <label for="edit_oppy">Oppy Transport</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_carrier" name="department[]" value="Carrier Connection">
+                  <label for="edit_carrier">Carrier Connection</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_admin" name="department[]" value="Administration & Managers">
+                  <label for="edit_admin">Administration & Managers</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_marketing" name="department[]" value="Marketing">
+                  <label for="edit_marketing">Marketing</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="editRefer">Referred By</label>
+                <input type="text" id="editRefer" name="refer" required>
+              </div>
+              <div class="form-group">
+                <label>Hired Date</label>
+<input type="date" name="hiredDate" id=""edithiredDate />
+              </div>
+              <div class="form-group">
+                <label for="editStatus">Status</label>
+                <select id="editStatus" name="status" required>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+               <div class="form-group">
+                <label for="editstatus">Employment Status</label>
+                <select id="editempstatus" name="empstatus" required>
+                  <option value="Intern">Intern</option>
+                  <option value="Probationary">Probationary</option>
+                  <option value="Regular">Regular</option>
+                </select>
+              </div>
+            </div>
+          </div>
+  
+          <div class="modal-footer">
+            <button type="button" class="btn-cancel">Cancel</button>
+            <button type="submit" class="btn-submit" name="update_employee">Update Employee</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hyacinth - Employee</title>
+    <link rel="stylesheet" href="../../style/employee.css" />
+    <link rel="stylesheet" href="../../style/empModal.css" />
+    <link rel="stylesheet" href="../../style/inputForms.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+
+  <body>
+    <main-sidebar></main-sidebar>
+    <div class="wrap-container">
+      <div class="employee-header">
+        <div class="header-title">
+          <h1>Employee Management</h1>
+        </div>
+
+        <div class="header-actions">
+          <button class="top-btn">
+            <i class="fa-solid fa-user-plus"></i> Add Employee
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Section -->
+      <div class="filter-buttons">
+        <select id="filterEmpStatus">
+          <option value="">All Employment Status</option>
+          <option value="Intern">Intern</option>
+          <option value="Probationary">Probationary</option>
+          <option value="Regular">Regular</option>
+        </select>
+
+        <select id="filterStatus">
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div class="data-table-container">
+        <table id="employeeTable" class="dataTable">
+          <thead>
+            <tr>
+              <th style="width: 20%">Name</th>
+              <th>Hired Date</th>
+              <th>Employment Status</th>
+              <th>Email</th>
+              <th>Referred By</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script type="module" src="../sidebar/sidebar.js"></script>
+    <script type="module" src="../../js/employee.js"></script>
+  </body>
+</html>
