@@ -534,8 +534,8 @@ async function editApplicant(applicantId) {
     modalContent.innerHTML = html;
     
     const fields = {
-      'editFirstName': applicant.firstName || '',
-      'editLastName': applicant.lastName || '',
+      'editfirstName': applicant.firstName || '',
+      'editlastName': applicant.lastName || '',
       'editDob': formatDateForInput(applicant.dob) || '',
       'editAddress': applicant.address || '',
       'editPhone': applicant.phone || '',
@@ -639,18 +639,18 @@ function initFileUpload(inputId, previewId, removeBtnId) {
     });
   }
 }
-
 async function handleAddApplicant(e) {
   e.preventDefault();
   const form = e.target;
   const formData = new FormData(form);
 
+  // Modified validation - removed position check
   if (!formData.get('firstName') || !formData.get('lastName') || 
-      !formData.get('email') || !formData.get('position')) {
+      !formData.get('email')) {
     Swal.fire({
       icon: 'warning',
       title: 'Validation Error',
-      text: 'Please fill in all required fields (First Name, Last Name, Email, Position)'
+      text: 'Please fill in all required fields (First Name, Last Name, Email)'
     });
     return;
   }
@@ -664,7 +664,7 @@ async function handleAddApplicant(e) {
     email: formData.get('email'),
     degree: formData.get('degree'),
     school: formData.get('school'),
-    position: formData.get('position'),
+    // Removed position from here as well
     source: formData.get('source'),
     appliedDate: formData.get('appliedDate'),
     status: formData.get('status'),
@@ -674,8 +674,7 @@ async function handleAddApplicant(e) {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
-
-  const resumeFile = document.getElementById('resumeFile')?.files[0];
+ const resumeFile = document.getElementById('resumeFile')?.files[0];
   if (resumeFile) {
     const reader = new FileReader();
     reader.onload = async function(e) {
