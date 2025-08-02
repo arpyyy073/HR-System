@@ -91,7 +91,6 @@ function initializeDataTable() {
     columns: [
       { data: 'name' },
       { data: 'degree' },
-      { data: 'appliedDate' },
       { data: 'source' },
       { data: 'initialInterview' },
       { data: 'finalInterview' },
@@ -253,9 +252,8 @@ function updateDashboardStats() {
   // Count by source
   let sourceCounts = {
     'Website': 0,
-    'Job Board': 0,
-    'Referral': 0,
-    'Other': 0
+    'Walk-in': 0,
+    'Referral': 0
   };
 
   Object.values(applicantsData).forEach(applicant => {
@@ -436,10 +434,7 @@ function viewApplicant(applicantId) {
               <label>Application Source</label>
               <div class="info-value">${applicant.source || 'N/A'}</div>
             </div>
-            <div class="info-item">
-              <label>Application Date</label>
-              <div class="info-value">${formatDateToMMDDYYYY(applicant.appliedDate) || 'N/A'}</div>
-            </div>
+            
             <div class="info-item">
               <label>Current Status</label>
               <div class="info-value status-${(applicant.status || '').toLowerCase().replace(/\s+/g, '-')}">${applicant.status || 'N/A'}</div>
@@ -468,9 +463,7 @@ function viewApplicant(applicantId) {
 
       <div class="modal-footer">
         ${resumeLink}
-        <button class="btn-print" onclick="window.print()">
-          <i class="fas fa-print"></i> Print Profile
-        </button>
+        
       </div>
     </div>
   `;
