@@ -8,15 +8,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Cache configuration
+
     const cacheKey = 'employeeCountsCache';
-    const CACHE_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
-    
-    // Employee data cache
+    const CACHE_REFRESH_INTERVAL = 5 * 60 * 1000;
+
     let allEmployeesCache = [];
     let lastFetchTime = 0;
-    
-    // Counters
+
     const deptCounters = {
         "count-internship": 0,
         "count-tgqs": 0,
@@ -34,8 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     let totalEmployees = 0;
-    
-    // Mapping configurations
+
     const departmentMapping = {
         "internship": "count-internship",
         "tgqs": "count-tgqs", 
@@ -60,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
         "hhi": "hhi-count"
     };
 
-    // Utility Functions
     function normalizeString(str) {
         return str ? str.toString().toLowerCase().trim() : '';
     }
@@ -138,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Data Fetching Functions
     async function fetchFreshData() {
         try {
             console.log('Fetching fresh employee data from Firestore...');
@@ -188,8 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             console.log(`Filtering employees by ${filterType}: ${filterValue}`);
             const targetValue = normalizeString(filterValue);
-            
-            // First try to use cached data
+
             if (allEmployeesCache.length > 0) {
                 return allEmployeesCache
                     .filter(employee => {
@@ -203,8 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         organization: employee.org || 'N/A'
                     }));
             }
-            
-            // Fallback to Firestore query if cache is empty
+
             console.log(`Fetching fresh data for filter: ${filterType}: ${filterValue}`);
             const q = query(
                 collection(db, 'employees'),
@@ -227,15 +220,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Modal Functions
     async function showModal(dataKey, title, source = "department") {
         const modal = document.getElementById("departmentModal");
         const modalTitle = document.getElementById("modalTitle");
         const tableBody = document.getElementById("modalTableBody");
 
         modalTitle.textContent = `${title} ${source === "department" ? "Department" : "Organization"}`;
-        
-        // Show cached data immediately
+
         const cachedFilter = source === "department" ? 'department' : 'org';
         const cachedResults = allEmployeesCache
             .filter(employee => 
@@ -288,9 +279,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // UI Functions
+
     function setupEventListeners() {
-        // Department cards
+
         document.querySelectorAll(".dept-card").forEach((card) => {
             card.addEventListener("click", () => {
                 const spanElement = card.querySelector("span[id*='count-']");
@@ -316,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        // Organization cards
+
         document.querySelectorAll(".stat-card-org").forEach((card) => {
             card.addEventListener("click", () => {
                 const counterElement = card.querySelector(".stat-counter");
@@ -329,7 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        // Modal close button
+
         const closeModalBtn = document.querySelector(".close-btn");
         if (closeModalBtn) {
             closeModalBtn.addEventListener("click", () => {
@@ -337,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // Modal backdrop click
+
         const modal = document.getElementById("departmentModal");
         if (modal) {
             modal.addEventListener("click", (e) => {
@@ -361,7 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function showToast(message, type = 'info') {
-        // Simple toast notification implementation
+
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         toast.textContent = message;
@@ -372,12 +363,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 3000);
     }
 
-    // Initialize the dashboard
     function initDashboard() {
         const hasCache = loadCachedData();
         fetchFreshData();
-        setupRealtimeListener();
-        setupEventListeners();
+        setTimeout(() => {
+            setupEventListeners();
+            setupRealtimeListener();
+        }, 0);
+
+        // 4. Expose refresh for manual use
         window.refreshDashboard = fetchFreshData;
     }
 

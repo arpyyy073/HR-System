@@ -54,7 +54,6 @@ function formatDateForInput(dateString) {
     return `${year}-${month}-${day}`;
 }
 
-// Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initializeModals();
     initDataTable();
@@ -62,6 +61,8 @@ document.addEventListener('DOMContentLoaded', function() {
     loadEmployeesFromFirebase();
 });
 function loadEmployeesFromFirebase() {
+    const loadingRow = document.getElementById('employeeLoadingRow');
+    if (loadingRow) loadingRow.style.display = '';
     const q = query(collection(db, 'employees'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
         employeesData = {};
@@ -69,6 +70,7 @@ function loadEmployeesFromFirebase() {
             employeesData[doc.id] = doc.data();
         });
         populateEmployeeTable();
+        if (loadingRow) loadingRow.style.display = 'none';
     }, (error) => {
         console.error('Error loading employees:', error);
         Swal.fire({
@@ -76,8 +78,9 @@ function loadEmployeesFromFirebase() {
             title: 'Database Error',
             text: 'Failed to load employees from database'
         });
+        if (loadingRow) loadingRow.style.display = 'none';
     });
-    
+
     return unsubscribe;
 }
 
@@ -119,26 +122,26 @@ async function deleteEmployeeFromFirebase(employeeId) {
     }
 }
 function populateEmployeeTable() {
+    // Always hide the loading row before DataTables draws
+    const loadingRow = document.getElementById('employeeLoadingRow');
+    if (loadingRow) loadingRow.style.display = 'none';
+
     if (employeesTable) {
         employeesTable.clear();
-        
-        Object.keys(employeesData).forEach(employeeId => {
+
+        // Prepare all rows first
+        const rows = Object.keys(employeesData).map(employeeId => {
             const employee = employeesData[employeeId];
             const fullName = `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
-            
-            // Create a safe JSON string for data attributes (remove problematic characters)
             const safeEmployeeData = {
                 ...employee,
-                profileImage: employee.profileImage || null // Ensure profileImage is included
+                profileImage: employee.profileImage || null
             };
-            
-            // Escape JSON for HTML attribute
             const employeeDataJson = JSON.stringify(safeEmployeeData).replace(/"/g, '&quot;');
-            
-            employeesTable.row.add([
+            return [
                 fullName || 'N/A',
-                employee.hireDate || 'N/A', // Already formatted as MM-DD-YYYY
-                employee.empstatus || 'N/A', // Changed from org to empstatus
+                employee.hireDate || 'N/A',
+                employee.empstatus || 'N/A',
                 employee.email || 'N/A',
                 employee.refer || 'N/A',
                 `<span class="status-badge status-${employee.status?.toLowerCase() || 'inactive'}">${employee.status || 'Inactive'}</span>`,
@@ -153,10 +156,15 @@ function populateEmployeeTable() {
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>`
-            ]);
+            ];
         });
-        
-        employeesTable.draw();
+
+        // Add all rows at once and draw
+        if (rows.length > 0) {
+            employeesTable.rows.add(rows).draw();
+        } else {
+            employeesTable.draw();
+        }
     }
 }
 

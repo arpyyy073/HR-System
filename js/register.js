@@ -3,11 +3,18 @@ import {
   createUserWithEmailAndPassword,
   updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 import { app } from "./firebase-config.js";
 
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-// Toastify helper function
 function showToast(message, color = "#333", duration = 3000) {
   Toastify({
     text: message,
@@ -40,6 +47,16 @@ window.register = function () {
     .then(async (userCredential) => {
       const user = userCredential.user;
       await updateProfile(user, { displayName: name });
+      const userData = {
+        uid: user.uid,
+        name: name,
+        email: email,
+        role: "user",
+        createdAt: new Date()
+      };
+
+      await setDoc(doc(db, "users", user.uid), userData);
+      console.log("User added to Firestore:", userData);
 
       showToast("Registration successful! Redirecting...", "#27ae60", 2000);
       setTimeout(() => {
