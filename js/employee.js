@@ -11,11 +11,9 @@ import {
     query
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Global variables
 let employeesTable;
 let employeesData = {};
 
-// Date formatting utility functions
 function formatDateToMMDDYYYY(dateString) {
     if (!dateString) return '';
     
@@ -32,18 +30,14 @@ function formatDateToMMDDYYYY(dateString) {
 function formatDateForInput(dateString) {
     if (!dateString) return '';
     
-    // If it's already in MM-DD-YYYY format, convert to YYYY-MM-DD for input
     if (dateString.match(/^\d{2}-\d{2}-\d{4}$/)) {
         const [month, day, year] = dateString.split('-');
         return `${year}-${month}-${day}`;
     }
     
-    // If it's in YYYY-MM-DD format, return as-is
     if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
         return dateString;
     }
-    
-    // Try to parse and format
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString;
     
@@ -54,13 +48,13 @@ function formatDateForInput(dateString) {
     return `${year}-${month}-${day}`;
 }
 
-// Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initializeModals();
     initDataTable();
     setupEventListeners();
     loadEmployeesFromFirebase();
 });
+
 function loadEmployeesFromFirebase() {
     const q = query(collection(db, 'employees'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -81,7 +75,6 @@ function loadEmployeesFromFirebase() {
     return unsubscribe;
 }
 
-// Add new employee to Firestore
 async function addEmployeeToFirebase(employeeData) {
     try {
         const docRef = await addDoc(collection(db, 'employees'), {
@@ -95,21 +88,14 @@ async function addEmployeeToFirebase(employeeData) {
         throw error;
     }
 }
-
-// Update employee in Firestore
 async function updateEmployeeInFirebase(employeeId, employeeData) {
     try {
-        await updateDoc(doc(db, 'employees', employeeId), {
-            ...employeeData,
-            updatedAt: new Date().toISOString()
-        });
+        await updateDoc(doc(db, 'employees', employeeId), employeeData);
     } catch (error) {
         console.error('Error updating employee:', error);
-        throw error;
+        throw error; // This allows the calling function to catch the error
     }
 }
-
-// Delete employee from Firestore
 async function deleteEmployeeFromFirebase(employeeId) {
     try {
         await deleteDoc(doc(db, 'employees', employeeId));
@@ -119,22 +105,18 @@ async function deleteEmployeeFromFirebase(employeeId) {
     }
 }
 
-function formatHireDate(dateString) {
+function formatPassedate(dateString) {
     if (!dateString) return 'N/A';
   
     const date = new Date(dateString);
     if (isNaN(date)) return 'Invalid Date';
   
-    const options = { month: 'long' }; // For full month name
-    const month = new Intl.DateTimeFormat('en-US', options).format(date);
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
     const day = String(date.getDate()).padStart(2, '0');
     const year = date.getFullYear();
   
     return `${month}-${day}-${year}`;
-  }
-  
-  // Usage:
-  const formattedDate = formatHireDate(employee.hireDate);
+}
   
 function populateEmployeeTable() {
     if (employeesTable) {
@@ -144,19 +126,21 @@ function populateEmployeeTable() {
             const employee = employeesData[employeeId];
             const fullName = `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
             
-            // Create a safe JSON string for data attributes (remove problematic characters)
+            const empstatus = Array.isArray(employee.empstatus) ? 
+                employee.empstatus.join(', ') : 
+                (employee.empstatus || 'N/A');
+            
             const safeEmployeeData = {
                 ...employee,
-                profileImage: employee.profileImage || null // Ensure profileImage is included
+                empstatus: empstatus
             };
             
-            // Escape JSON for HTML attribute
             const employeeDataJson = JSON.stringify(safeEmployeeData).replace(/"/g, '&quot;');
             
             employeesTable.row.add([
                 fullName || 'N/A',
-                employee.hireDate || 'N/A', // Already formatted as MM-DD-YYYY
-                employee.empstatus || 'N/A', // Changed from org to empstatus
+                employee.Passedate ? formatPassedate(employee.Passedate) : 'N/A',
+                employee.empstatus,
                 employee.email || 'N/A',
                 employee.refer || 'N/A',
                 `<span class="status-badge status-${employee.status?.toLowerCase() || 'inactive'}">${employee.status || 'Inactive'}</span>`,
@@ -178,7 +162,6 @@ function populateEmployeeTable() {
     }
 }
 
-// Modal functions
 function showEmployeeDetails(employee) {
     const modal = document.getElementById("employeeModal");
     if (modal) {
@@ -189,30 +172,17 @@ function showEmployeeDetails(employee) {
         document.getElementById("empPhone").textContent = employee.phone || '-';
         document.getElementById("empEmail").textContent = employee.email || '-';
         document.getElementById("empOrg").textContent = employee.org || '-';
-        document.getElementById("empDept").textContent = employee.department || '-';
+        
+        // Handle department display in view modal
+        const departments = Array.isArray(employee.department) ? 
+            employee.department.join(', ') : 
+            (employee.department || '-');
+        document.getElementById("empDept").textContent = departments;
+        
         document.getElementById("empRefer").textContent = employee.refer || '-';
-        document.getElementById("empHire").textContent = employee.hireDate || '-';
+        document.getElementById("empHire").textContent = employee.Passedate ? formatPassedate(employee.Passedate) : '-';
         document.getElementById("status").textContent = employee.status || '-';
         document.getElementById("empstatus").textContent = employee.empstatus || '-';
-        
-        // Handle employee photo
-        const empPhoto = document.getElementById("empPhoto");
-        if (empPhoto) {
-            if (employee.profileImage && employee.profileImage.trim() !== '') {
-                empPhoto.src = employee.profileImage;
-                empPhoto.style.display = 'block';
-            } else {
-                // Use default image if no profile image
-                empPhoto.src = '/images/assets/default-employee.jpg';
-                empPhoto.style.display = 'block';
-            }
-            
-            // Handle image load errors
-            empPhoto.onerror = function() {
-                this.src = 'https://via.placeholder.com/150x150/cccccc/666666?text=No+Image';
-            };
-        }
-        
         modal.style.display = "flex";
         document.body.style.overflow = "hidden";
     }
@@ -241,14 +211,12 @@ function closeAddEmployeeModal() {
         document.body.style.overflow = "auto";
         const form = modal.querySelector("form");
         if (form) form.reset();
-        resetImagePreview('imagePreview', 'previewImage', 'removeImageBtn');
     }
 }
-
 function openEditEmployeeModal(employee, employeeId) {
     const modal = document.getElementById("editEmployeeModal");
     if (modal) {
-        // Fill form with employee data - convert dates back to input format (YYYY-MM-DD)
+        // Fill form with employee data
         document.getElementById("editFirstName").value = employee.firstName || '';
         document.getElementById("editLastName").value = employee.lastName || '';
         document.getElementById("editDob").value = formatDateForInput(employee.dob) || '';
@@ -256,42 +224,27 @@ function openEditEmployeeModal(employee, employeeId) {
         document.getElementById("editPhone").value = employee.phone || '';
         document.getElementById("editEmail").value = employee.email || '';
         document.getElementById("editOrg").value = employee.org || '';
-        document.getElementById("editDepartment").value = employee.department || '';
-        document.getElementById("editRefer").value = employee.refer || '';
-        document.getElementById("editHireDate").value = formatDateForInput(employee.hireDate) || '';
-        document.getElementById("editStatus").value = employee.status || '';
-        document.getElementById("editempstatus").value = employee.empstatus || '';
         
-        // Handle profile image in edit modal
-        const editPreviewImage = document.getElementById("editPreviewImage");
-        const editDefaultText = document.querySelector('#editImagePreview .default-text');
-        const editRemoveBtn = document.getElementById("editRemoveImageBtn");
+        // Handle department checkboxes - ensure we're working with an array
+        const departmentCheckboxes = modal.querySelectorAll('input[name="department[]"]');
+        let employeeDepartments = [];
         
-        if (editPreviewImage) {
-            if (employee.profileImage && employee.profileImage.trim() !== '') {
-                editPreviewImage.src = employee.profileImage;
-                editPreviewImage.style.display = 'block';
-                if (editDefaultText) editDefaultText.style.display = 'none';
-                if (editRemoveBtn) editRemoveBtn.style.display = 'block';
-            } else {
-                editPreviewImage.src = '/images/assets/default-employee.jpg';
-                editPreviewImage.style.display = 'block';
-                if (editDefaultText) editDefaultText.textContent = 'Current photo';
-            }
-            
-            // Handle image load errors
-            editPreviewImage.onerror = function() {
-                this.src = 'https://via.placeholder.com/150x150/cccccc/666666?text=No+Image';
-                if (editDefaultText) {
-                    editDefaultText.style.display = 'block';
-                    editDefaultText.textContent = 'No image available';
-                }
-            };
+        if (Array.isArray(employee.department)) {
+            employeeDepartments = employee.department;
+        } else if (employee.department) {
+            // If it's a string, split by comma and trim whitespace
+            employeeDepartments = employee.department.split(',').map(dept => dept.trim());
         }
         
-        // Store employee ID for updates
-        modal.setAttribute('data-employee-id', employeeId);
+        departmentCheckboxes.forEach(checkbox => {
+            checkbox.checked = employeeDepartments.includes(checkbox.value);
+        });
         
+        document.getElementById("editRefer").value = employee.refer || '';
+        document.getElementById("editPassedate").value = formatDateForInput(employee.Passedate) || '';
+        document.getElementById("editStatus").value = employee.status || '';
+        document.getElementById("editempstatus").value = employee.empstatus || '';
+        modal.setAttribute('data-employee-id', employeeId);
         modal.style.display = "block";
         document.body.style.overflow = "hidden";
     }
@@ -303,7 +256,6 @@ function closeEditEmployeeModal() {
         modal.style.display = "none";
         document.body.style.overflow = "auto";
         modal.removeAttribute('data-employee-id');
-        resetImagePreview('editImagePreview', 'editPreviewImage', 'editRemoveImageBtn');
     }
 }
 
@@ -316,53 +268,48 @@ function handleAddEmployeeForm(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
     
-    // Get profile image
-    const profileImageFile = document.getElementById('profileImage').files[0];
-    let profileImageData = null;
+    // Get selected departments
+    const departmentCheckboxes = document.querySelectorAll('#addEmployeeModal input[name="department[]"]:checked');
+    const departments = Array.from(departmentCheckboxes).map(cb => cb.value);
     
-    if (profileImageFile) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            profileImageData = e.target.result;
-            saveEmployeeData();
-        };
-        reader.readAsDataURL(profileImageFile);
-    } else {
-        saveEmployeeData();
+    const employeeData = {
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+        dob: formData.get('dob'),
+        address: formData.get('address'),
+        phone: formData.get('phone'),
+        email: formData.get('email'),
+        org: formData.get('org'),
+        department: departments,
+        refer: formData.get('ref'),
+        Passedate: formData.get('Passedate'),
+        status: formData.get('status'),
+        empstatus: formData.get('empstatus')
+    };
+    
+    // Basic validation
+    if (!employeeData.firstName || !employeeData.lastName || !employeeData.email) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Validation Error',
+            text: 'Please fill in all required fields (First Name, Last Name, Email)'
+        });
+        return;
     }
     
-    function saveEmployeeData() {
-        const employeeData = {
-            firstName: formData.get('firstName'),
-            lastName: formData.get('lastName'),
-            dob: formData.get('dob'), // Will be formatted in addEmployeeToFirebase
-            address: formData.get('address'),
-            phone: formData.get('phone'),
-            email: formData.get('email'),
-            org: formData.get('org'),
-            department: formData.get('department'),
-            refer: formData.get('ref'),
-            hireDate: formData.get('hireDate'), // Will be formatted in addEmployeeToFirebase
-            status: formData.get('status'),
-            empstatus: formData.get('empstatus'),
-            profileImage: profileImageData || null
-        };
-        
-        // Basic validation
-        if (!employeeData.firstName || !employeeData.lastName || !employeeData.email) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Validation Error',
-                text: 'Please fill in all required fields (First Name, Last Name, Email)'
-            });
-            return;
-        }
-        
-        addEmployeeToFirebase(employeeData);
+    if (departments.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Validation Error',
+            text: 'Please select at least one department'
+        });
+        return;
     }
+    
+    addEmployeeToFirebase(employeeData);
 }
 
-function handleEditEmployeeForm(event) {
+async function handleEditEmployeeForm(event) {
     event.preventDefault();
     const modal = document.getElementById("editEmployeeModal");
     const employeeId = modal.getAttribute('data-employee-id');
@@ -377,56 +324,49 @@ function handleEditEmployeeForm(event) {
     }
     
     const formData = new FormData(event.target);
-    const currentEmployee = employeesData[employeeId];
     
-    // Get profile image
-    const profileImageFile = document.getElementById('editProfileImage').files[0];
+    // Get selected departments
+    const departmentCheckboxes = modal.querySelectorAll('input[name="department[]"]:checked');
+    const departments = Array.from(departmentCheckboxes).map(cb => cb.value);
     
-    if (profileImageFile) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const employeeData = {
-                firstName: formData.get('firstName'),
-                lastName: formData.get('lastName'),
-                dob: formData.get('dob'),
-                address: formData.get('address'),
-                phone: formData.get('phone'),
-                email: formData.get('email'),
-                org: formData.get('org'),
-                department: formData.get('department'),
-                refer: formData.get('refer'),
-                hireDate: formData.get('hireDate'),
-                status: formData.get('status'),
-                empstatus: formData.get('empstatus'),
-                profileImage: e.target.result
-            };
-            
-            updateEmployeeInFirebase(employeeId, employeeData);
-        };
-        reader.readAsDataURL(profileImageFile);
-    } else {
-        // If no new image was selected, keep the existing one
-        const employeeData = {
-            firstName: formData.get('firstName'),
-            lastName: formData.get('lastName'),
-            dob: formData.get('dob'),
-            address: formData.get('address'),
-            phone: formData.get('phone'),
-            email: formData.get('email'),
-            org: formData.get('org'),
-            department: formData.get('department'),
-            refer: formData.get('refer'),
-            hireDate: formData.get('hireDate'),
-            status: formData.get('status'),
-            empstatus: formData.get('empstatus'),
-            profileImage: currentEmployee?.profileImage || null
-        };
+    const employeeData = {
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+        dob: formData.get('dob'),
+        address: formData.get('address'),
+        phone: formData.get('phone'),
+        email: formData.get('email'),
+        org: formData.get('org'),
+        department: departments,
+        refer: formData.get('refer'),
+        Passedate: formData.get('Passedate'),
+        status: formData.get('status'),
+        empstatus: formData.get('empstatus'),
+        updatedAt: new Date().toISOString()
+    };
+    
+    try {
+        await updateEmployeeInFirebase(employeeId, employeeData);
         
-        updateEmployeeInFirebase(employeeId, employeeData);
+        // Show success message and close modal
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Employee updated successfully',
+            timer: 2000,
+            showConfirmButton: false
+        }).then(() => {
+            closeEditEmployeeModal();
+        });
+    } catch (error) {
+        console.error('Error updating employee:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to update employee'
+        });
     }
 }
-
-// Initialize modals
 function initializeModals() {
     // Load employee modal
     fetch('empModal.html')
@@ -443,7 +383,6 @@ function initializeModals() {
         .then(response => response.text())
         .then(html => {
             document.body.insertAdjacentHTML('beforeend', html);
-            initImageUpload();
             // Add form submission handler
             const addForm = document.getElementById('addEmployeeForm');
             if (addForm) {
@@ -457,7 +396,6 @@ function initializeModals() {
         .then(response => response.text())
         .then(html => {
             document.body.insertAdjacentHTML('beforeend', html);
-            initEditImageUpload();
             // Add form submission handler
             const editForm = document.getElementById('editEmployeeForm');
             if (editForm) {
@@ -502,7 +440,6 @@ function setupFilters() {
         employeesTable.column(2).search(this.value).draw();
     });
 
-    // Changed from filterOrg to filterEmpStatus
     $("#filterEmpStatus").on("change", function () {
         employeesTable.column(2).search(this.value).draw();
     });
@@ -511,7 +448,7 @@ function setupFilters() {
         employeesTable.column(5).search(this.value).draw();
     });
 
-    $("#filterHireDate").on("change", function () {
+    $("#filterPassedate").on("change", function () {
         employeesTable.column(1).search(this.value).draw();
     });
 }
@@ -618,119 +555,6 @@ function setupEventListeners() {
             }
         });
     });
-}
-
-// Image upload functions
-function initImageUpload() {
-    const imageUpload = document.getElementById('profileImage');
-    const previewImage = document.getElementById('previewImage');
-    const defaultText = document.querySelector('#imagePreview .default-text');
-    const removeImageBtn = document.getElementById('removeImageBtn');
-
-    if (!imageUpload || !previewImage) return;
-
-    imageUpload.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            if (!file.type.match('image.*')) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Invalid File',
-                    text: 'Please select an image file'
-                });
-                return;
-            }
-
-            if (file.size > 2 * 1024 * 1024) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'File Too Large',
-                    text: 'Image must be less than 2MB'
-                });
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImage.src = e.target.result;
-                previewImage.style.display = 'block';
-                if (defaultText) defaultText.style.display = 'none';
-                if (removeImageBtn) removeImageBtn.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    if (removeImageBtn) {
-        removeImageBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            resetImagePreview('imagePreview', 'previewImage', 'removeImageBtn');
-            imageUpload.value = '';
-        });
-    }
-}
-
-function initEditImageUpload() {
-    const imageUpload = document.getElementById('editProfileImage');
-    const previewImage = document.getElementById('editPreviewImage');
-    const defaultText = document.querySelector('#editImagePreview .default-text');
-    const removeImageBtn = document.getElementById('editRemoveImageBtn');
-
-    if (!imageUpload || !previewImage) return;
-
-    imageUpload.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            if (!file.type.match('image.*')) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Invalid File',
-                    text: 'Please select an image file'
-                });
-                return;
-            }
-
-            if (file.size > 2 * 1024 * 1024) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'File Too Large',
-                    text: 'Image must be less than 2MB'
-                });
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImage.src = e.target.result;
-                previewImage.style.display = 'block';
-                if (defaultText) defaultText.style.display = 'none';
-                if (removeImageBtn) removeImageBtn.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    if (removeImageBtn) {
-        removeImageBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            resetImagePreview('editImagePreview', 'editPreviewImage', 'editRemoveImageBtn');
-            imageUpload.value = '';
-        });
-    }
-}
-
-function resetImagePreview(containerId, imageId, buttonId) {
-    const container = document.getElementById(containerId);
-    const image = document.getElementById(imageId);
-    const button = document.getElementById(buttonId);
-    const defaultText = container?.querySelector('.default-text');
-    
-    if (image) {
-        image.src = '';
-        image.style.display = 'none';
-    }
-    if (defaultText) defaultText.style.display = 'block';
-    if (button) button.style.display = 'none';
 }
 
 window.showEmployeeDetails = showEmployeeDetails;

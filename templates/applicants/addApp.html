@@ -1,3 +1,4 @@
+<!-- addApp.html -->
 <div class="modal-header">
   <h2 class="modal-title">
     <svg class="icon-user" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -6,7 +7,7 @@
     </svg>
     Add New Applicant
   </h2>
-  <button class="close-modal">&times;</button>
+  <button class="close-modal" onclick="closeModal('addApplicantModal')">&times;</button>
 </div>
 
 <div class="modal-body">
@@ -21,10 +22,6 @@
         <div class="info-item">
           <label>Last Name</label>
           <div class="info-value"><input type="text" name="lastName" required></div>
-        </div>
-        <div class="info-item">
-          <label>Date of Birth</label>
-          <div class="info-value"><input type="date" name="dob"></div>
         </div>
         <div class="info-item">
           <label>Address</label>
@@ -52,20 +49,12 @@
           <label>School/University</label>
           <div class="info-value"><input type="text" name="school"></div>
         </div>
-        <div class="info-item">
-          <label>Year Graduated</label>
-          <div class="info-value"><input type="number" name="graduationYear"></div>
-        </div>
       </div>
     </div>
 
     <div class="info-section">
       <h3 class="section-title">Application Details</h3>
       <div class="info-grid">
-        <div class="info-item">
-          <label>Position Applied</label>
-          <div class="info-value"><input type="text" name="position" required></div>
-        </div>
         <div class="info-item">
           <label>Application Source</label>
           <div class="info-value">
@@ -86,9 +75,9 @@
           <div class="info-value">
             <select name="status" required>
               <option value="New">New</option>
-              <option value="Under Review">Under Review</option>
-              <option value="Interview Scheduled">Interview Scheduled</option>
-              <option value="Hired">Hired</option>
+              <option value="Callback">Callback</option>
+              <option value="In-progress">In-progress</option>
+              <option value="Passed">Passed</option>
               <option value="Rejected">Rejected</option>
             </select>
           </div>
@@ -107,11 +96,24 @@
     <div class="info-section">
       <h3 class="section-title">Resume</h3>
       <div class="file-upload-container">
-        <input type="file" id="resumeFile" name="resumeFile" style="display: none;">
+        <input type="file" id="resumeFile" name="resumeFile" accept=".pdf,.doc,.docx" style="display: none;">
         <label for="resumeFile" class="file-upload-label">
-          <i class="fas fa-cloud-upload-alt"></i> Upload Resume
+          <i class="fas fa-cloud-upload-alt"></i> Upload Resume (PDF/DOC)
         </label>
         <div id="resumePreview">No file selected</div>
+        <button type="button" id="removeResumeBtn" class="btn-remove" style="display: none;">Remove</button>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h3 class="section-title">Notes</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Additional Notes</label>
+          <div class="info-value">
+            <textarea name="notes" rows="3"></textarea>
+          </div>
+        </div>
       </div>
     </div>
 

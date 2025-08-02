@@ -1,6 +1,13 @@
 @import url(style.css);
 @import url(sidebar.css);
 
+
+/* A nice versatile slate blue-gray */
+:root {
+  --icon-color: #40577A;
+  --icon-hover-color: #6A86B1;
+}
+
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -34,7 +41,12 @@
 
 .notification i {
   font-size: 18px;
-  color: #801100;
+  color: var(--icon-color);
+  transition: color 0.2s ease;
+}
+
+.notification i:hover {
+  color: var(--icon-hover-color);
 }
 
 .notification-count {
@@ -48,10 +60,6 @@
   padding: 2px 6px;
   border-radius: 50%;
   line-height: 1;
-}
-
-.notification:hover i {
-  color: #a31414;
 }
 
 
@@ -102,34 +110,40 @@
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background-color: #f4f4f4;
+  background: linear-gradient(145deg, #e7f1fb, #c6daf7); 
+  box-shadow: 4px 4px 8px #cbd8e7,
+              -4px -4px 8px #f3f8ff; 
   display: flex;
-  border: 1px solid #801100;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: background-color 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
 }
 
 .circle-container:hover {
-  background-color: #e0e0e0;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+  filter: brightness(1.03);
 }
 
+/* Stat icons */
 .stat-icon {
   font-size: 22px;
   margin-bottom: 5px;
   text-align: center;
+  color: var(--icon-color);
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .circle-container .stat-icon {
   font-size: 24px;
-  color: #801100;
+  color: var(--icon-color);
 }
 
 .stat-icon:hover {
-  color: #801100;
+  color: var(--icon-hover-color);
   transform: scale(1.1);
-  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .stat-counter {
@@ -167,7 +181,12 @@
 
 .org-container .stat-icon {
   font-size: 24px;
-  color: #801100;
+  color: var(--icon-color);
+}
+
+.org-container .stat-icon:hover {
+  color: var(--icon-hover-color);
+  transform: scale(1.1);
 }
 
 .org-container h3 {
@@ -178,23 +197,25 @@
 }
 
 .stat-card-org {
-  background-color: #fff6f6;
-  border: 1px solid #801100;
+  background: linear-gradient(145deg, #9b9fd6, #c5c8eb); /* lighter hyacinth colors */
+  border: none;
   border-radius: 10px;
   padding: 14px 18px;
   font-size: 14px;
   font-weight: 500;
-  color: #333;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  color: white;
+  box-shadow: 3px 3px 6px #bfc2e8; /* soft minimal shadow */
   cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease, background-color 0.3s ease;
 }
 
 .stat-card-org:hover {
-  background-color: #fff1f1;
+  background-color: #d1d3f4; /* slightly lighter on hover */
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(128, 17, 0, 0.15);
+  box-shadow: 0 2px 6px rgba(155, 159, 214, 0.3);
 }
+
+
 
 
 
@@ -264,7 +285,12 @@
 
 .dept-card i {
   font-size: 15px;
-  color: #801100;
+  color: var(--icon-color);
+  transition: color 0.2s ease;
+}
+
+.dept-card:hover i {
+  color: var(--icon-hover-color);
 }
 
 .dept-card .count {

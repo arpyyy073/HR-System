@@ -10,23 +10,6 @@
       <div class="modal-body">
         <form id="editEmployeeForm">
           <div class="form-section">
-            <h3 class="section-title">Profile Picture</h3>
-            <div class="image-upload-container">
-              <div class="image-preview" id="editImagePreview">
-                <img src="/images/assets/default-employee.jpg" alt="Profile Preview" class="preview-image" id="editPreviewImage">
-                <div class="default-text">Current photo</div>
-              </div>
-              <div class="image-upload-controls">
-                <input type="file" id="editProfileImage" name="profileImage" accept="image/*" class="image-upload-input">
-                <label for="editProfileImage" class="image-upload-label">
-                  <i class="fas fa-cloud-upload-alt"></i> Change Image
-                </label>
-                <button type="button" class="btn-remove-image" id="editRemoveImageBtn">Remove</button>
-              </div>
-            </div>
-          </div>
-  
-          <div class="form-section">
             <h3 class="section-title">Personal Information</h3>
             <div class="form-grid">
               <div class="form-group">
@@ -69,26 +52,54 @@
                 </select>
               </div>
               <div class="form-group">
-                <label for="editDepartment">Department</label>
-                <select id="editDepartment" name="department" required>
-                <option value="">Select Department</option>
-                 <option value="Internship">Internship</option>
-                <option value="IT & Technical">IT & Technical</option>
-                <option value="UnicornHair AI">UnicornHair AI</option>
-                <option value="TGQS">TGQS</option>
-                <option value="Oppy Transport">Oppy Transport</option>
-                <option value="Carrier Connection">Carrier Connection</option>
-                <option value="Administration & Managers">Administration & Managers</option>
-                <option value="Marketing">Marketing</option>
-                </select>
+                <label>Department</label>
+                <div>
+                  <input type="checkbox" id="edit_internship" name="department[]" value="Internship">
+                  <label for="edit_internship">Internship</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_it" name="department[]" value="IT & Technical">
+                  <label for="edit_it">IT & Technical</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_unicorn" name="department[]" value="UnicornHair AI">
+                  <label for="edit_unicorn">UnicornHair AI</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_tgqs" name="department[]" value="TGQS">
+                  <label for="edit_tgqs">TGQS</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_oppy" name="department[]" value="Oppy Transport">
+                  <label for="edit_oppy">Oppy Transport</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_carrier" name="department[]" value="Carrier Connection">
+                  <label for="edit_carrier">Carrier Connection</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_admin" name="department[]" value="Administration & Managers">
+                  <label for="edit_admin">Administration & Managers</label>
+                </div>
+
+                <div>
+                  <input type="checkbox" id="edit_marketing" name="department[]" value="Marketing">
+                  <label for="edit_marketing">Marketing</label>
+                </div>
               </div>
               <div class="form-group">
                 <label for="editRefer">Referred By</label>
                 <input type="text" id="editRefer" name="refer" required>
               </div>
               <div class="form-group">
-                <label for="editHireDate">Hire Date</label>
-                <input type="date" id="editHireDate" name="hireDate" required>
+                <label for="editPassedate">Hire Date</label>
+                <input type="date" id="editPassedate" name="Passedate" required>
               </div>
               <div class="form-group">
                 <label for="editStatus">Status</label>
@@ -101,7 +112,7 @@
                 <label for="editstatus">Employment Status</label>
                 <select id="editempstatus" name="empstatus" required>
                   <option value="Intern">Intern</option>
-                  <option value="Probitionary">Probitionary</option>
+                  <option value="Probationary">Probationary</option>
                   <option value="Regular">Regular</option>
                 </select>
               </div>

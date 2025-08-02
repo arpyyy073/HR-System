@@ -141,28 +141,34 @@
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background-color: #f4f4f4;
-  border: 1px solid #801100;
+  background: linear-gradient(145deg, #e7f1fb, #c6daf7); /* lighter pastel blue */
+  box-shadow: 4px 4px 8px #cbd8e7,
+              -4px -4px 8px #f3f8ff; /* softer, minimal shadows */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  transition: background-color 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
 }
 
 .circle-container:hover {
-  background-color: #e0e0e0;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+  filter: brightness(1.03);
 }
 
 .stat-icon {
-  font-size: 20px;
-  margin-bottom: 4px;
-  color: #801100;
-  transition: transform 0.2s ease;
+  font-size: 22px;
+  margin-bottom: 5px;
+  text-align: center;
+  color: var(--icon-color);
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.stat-icon:hover {
-  transform: scale(1.08);
+.circle-container .stat-icon {
+  font-size: 24px;
+  color: var(--icon-color);
 }
 
 .stat-counter {
@@ -329,26 +335,41 @@ table#applicantTable td {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  margin-right: 8px;
-  font-size: 16px;
+  margin-right: 4px;   /* reduced spacing */
+  font-size: 15px;     /* smaller icon size */
   transition: color 0.2s;
+  padding: 0;          /* remove default padding */
+  line-height: 1;
 }
 
-.icon-btn.view {
-  color: #3498db;
+
+.view-btn {
+  color: #17a2b8; /* icon color */
+  background-color: transparent;
 }
 
-.icon-btn.edit {
-  color: #f1c40f;
+.edit-btn {
+  color: #ffc107;
+  background-color: transparent;
 }
 
-.icon-btn.delete {
-  color: #e74c3c;
+.delete-btn {
+  color: #dc3545;
+  background-color: transparent;
 }
 
-.icon-btn:hover {
-  opacity: 0.8;
+.view-btn:hover {
+  color: #138496;
 }
+
+.edit-btn:hover {
+  color: #e0a800;
+}
+
+.delete-btn:hover {
+  color: #bd2130;
+}
+
 
 .icon-btn[title] {
   position: relative;

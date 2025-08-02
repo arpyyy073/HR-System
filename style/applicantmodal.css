@@ -198,10 +198,9 @@
   }
   
   /* Status Styles */
-  .status-new { color: #3498db; font-weight: 600; }
-  .status-under-review { color: #f39c12; font-weight: 600; }
-  .status-interview-scheduled { color: #9b59b6; font-weight: 600; }
-  .status-hired { color: #2ecc71; font-weight: 600; }
+  .status-in-progress { color: #f39c12; font-weight: 600; }
+  .status-callback { color: #3498db; font-weight: 600; }
+  .status-Passed { color: #2ecc71; font-weight: 600; }
   .status-rejected { color: #e74c3c; font-weight: 600; }
   
   /* ======================

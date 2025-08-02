@@ -193,9 +193,10 @@ table#employeeTable tbody tr:hover {
 
 .action-buttons {
   display: flex;
+  flex-direction: row;   /* horizontal alignment */
   justify-content: center;
-  gap: 6px;
-  flex-wrap: wrap;
+  gap: 3px;              /* spacing between buttons */
+  flex-wrap: nowrap;     /* prevent wrapping */
 }
 
 .icon-btn {
@@ -205,42 +206,45 @@ table#employeeTable tbody tr:hover {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  margin: 0 2px;
-  font-size: 16px;
+  margin: 0 1px;
+  font-size: 12px;       /* icon size */
   transition: all 0.2s;
-  padding: 6px;
-  border-radius: 4px;
+  padding: 0;            /* removed padding */
+  border-radius: 0;      /* removed border radius */
   line-height: 1;
-  width: 32px;
-  height: 32px;
+  width: auto;           /* auto width to fit icon */
+  height: auto;          /* auto height */
 }
+
 
 .view-btn {
-  color: #17a2b8;
-  background-color: rgba(23, 162, 184, 0.1);
-}
-
-.view-btn:hover {
-  background-color: rgba(23, 162, 184, 0.2);
+  color: #17a2b8; /* icon color */
+  background-color: transparent;
 }
 
 .edit-btn {
   color: #ffc107;
-  background-color: rgba(255, 193, 7, 0.1);
-}
-
-.edit-btn:hover {
-  background-color: rgba(255, 193, 7, 0.2);
+  background-color: transparent;
 }
 
 .delete-btn {
   color: #dc3545;
-  background-color: rgba(220, 53, 69, 0.1);
+  background-color: transparent;
+}
+
+.view-btn:hover {
+  color: #138496;
+}
+
+.edit-btn:hover {
+  color: #e0a800;
 }
 
 .delete-btn:hover {
-  background-color: rgba(220, 53, 69, 0.2);
+  color: #bd2130;
 }
+
+
 
 .icon-btn[title] {
   position: relative;

@@ -12,6 +12,8 @@
   --border-color: #d0d0d0;
   --bg-light: #f8f9fa;
   --bg-dark: #e8ebf0;
+  --icon-color: #40577A;
+  --icon-hover-color: #6A86B1;
 }
 
 * {

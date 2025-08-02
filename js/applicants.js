@@ -123,8 +123,6 @@ function initializeDataTable() {
       }
     ]
   });
-
-  
 }
 
 function initializeChart() {
@@ -134,18 +132,29 @@ function initializeChart() {
   // Destroy existing chart if it exists
   if (applicantsChart) {
     applicantsChart.destroy();
-    applicantsChart = null;
   }
   
   // Create new chart instance
   applicantsChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['Passed', 'Pending', 'Rejected', 'Callback'],
+      labels: ['Passed', 'In-progress', 'Rejected', 'Callback'],
       datasets: [{
         label: 'Applicants',
         data: [0, 0, 0, 0],
-        backgroundColor: ['#4CAF50', '#FFC107', '#F44336', '#03A9F4'],
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(54, 162, 235, 0.6)'
+        ],
+        borderColor: [
+          'rgba(75, 192, 192, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)'
+        ],
+        borderWidth: 1,
         borderRadius: 8,
         barThickness: 40,
       }]
@@ -170,10 +179,20 @@ function initializeChart() {
           beginAtZero: true,
           ticks: {
             stepSize: 1,
+            precision: 0
           },
+          grid: {
+            display: true,
+            color: "rgba(0, 0, 0, 0.1)"
+          }
         },
-      },
-    },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      }
+    }
   });
 }
 
@@ -189,7 +208,7 @@ function loadApplicants() {
       applicantsData[doc.id] = data;
       applicants.push({
         id: doc.id,
-        name: `${data.firstName} ${data.lastName}`,
+        name: `${data.firstName || ''} ${data.lastName || ''}`.trim(),
         degree: data.degree || 'N/A',
         appliedDate: formatDateToMMDDYYYY(data.appliedDate) || 'N/A',
         source: data.source || 'N/A',
@@ -224,18 +243,19 @@ function updateDashboardStats() {
 
   // Count by status
   let statusCounts = {
-    'Hired': 0,
+    'Passed': 0,
     'New': 0,
-    'Under Review': 0,
-    'Interview Scheduled': 0,
+    'Callback': 0,
+    'In-progress': 0,
     'Rejected': 0
   };
 
   // Count by source
   let sourceCounts = {
-    'Online Post': 0,
-    'Walk-in': 0,
-    'Referral': 0
+    'Website': 0,
+    'Job Board': 0,
+    'Referral': 0,
+    'Other': 0
   };
 
   Object.values(applicantsData).forEach(applicant => {
@@ -246,33 +266,24 @@ function updateDashboardStats() {
     
     // Count by source
     if (applicant.source) {
-      if (applicant.source === 'Website' || applicant.source === 'Job Board') {
-        sourceCounts['Online Post']++;
-      } else if (applicant.source === 'Other') {
-        sourceCounts['Walk-in']++;
-      } else if (applicant.source === 'Referral') {
-        sourceCounts['Referral']++;
-      }
+      sourceCounts[applicant.source] = (sourceCounts[applicant.source] || 0) + 1;
     }
   });
 
   // Update status counts
   const statusCountElements = document.querySelectorAll('.status-count');
   if (statusCountElements.length >= 4) {
-    statusCountElements[0].textContent = statusCounts['Hired'] || 0;
-    statusCountElements[1].textContent = 
-      (statusCounts['New'] || 0) + 
-      (statusCounts['Under Review'] || 0) + 
-      (statusCounts['Interview Scheduled'] || 0);
+    statusCountElements[0].textContent = statusCounts['Passed'] || 0;
+   statusCountElements[1].textContent = statusCounts['In-progress'] || 0;
     statusCountElements[2].textContent = statusCounts['Rejected'] || 0;
-    statusCountElements[3].textContent = statusCounts['Interview Scheduled'] || 0;
+    statusCountElements[3].textContent = statusCounts['Callback'] || 0;
   }
 
   // Update source counts
   const sourceCountElements = document.querySelectorAll('.source-count');
   if (sourceCountElements.length >= 3) {
-    sourceCountElements[0].textContent = sourceCounts['Online Post'] || 0;
-    sourceCountElements[1].textContent = sourceCounts['Walk-in'] || 0;
+    sourceCountElements[0].textContent = (sourceCounts['Website'] || 0) + (sourceCounts['Job Board'] || 0);
+    sourceCountElements[1].textContent = sourceCounts['Other'] || 0;
     sourceCountElements[2].textContent = sourceCounts['Referral'] || 0;
   }
 
@@ -286,12 +297,10 @@ function updateChart(statusCounts) {
   }
 
   const chartData = {
-    'Passed': statusCounts['Hired'] || 0,
-    'Pending': (statusCounts['New'] || 0) + 
-              (statusCounts['Under Review'] || 0) + 
-              (statusCounts['Interview Scheduled'] || 0),
+    'Passed': statusCounts['Passed'] || 0,
+    'In-progress': (statusCounts['In-progress'] || 0) + (statusCounts['In-progress'] || 0),
     'Rejected': statusCounts['Rejected'] || 0,
-    'Callback': statusCounts['Interview Scheduled'] || 0
+    'Callback': statusCounts['Callback'] || 0
   };
 
   if (applicantsChart) {
@@ -327,7 +336,6 @@ function setupEventListeners() {
     });
   }
 
-  // Close modals when clicking outside or on close button
   document.addEventListener('click', function(e) {
     // Close modal when clicking on backdrop
     if (e.target.classList.contains('modal') || e.target.classList.contains('form-modal')) {
@@ -351,17 +359,22 @@ function viewApplicant(applicantId) {
     return;
   }
 
-  console.log('Opening view modal for:', applicant.firstName, applicant.lastName);
-
-  // Get the modal
   const modal = document.getElementById('applicantModal');
-  
   if (!modal) {
     console.error('Modal element not found');
     return;
   }
 
-  // Create the complete modal HTML structure
+  // Create resume link if exists
+  let resumeLink = '';
+  if (applicant.resumeFile) {
+    resumeLink = `
+      <a href="${applicant.resumeFile}" class="btn-resume" target="_blank" download="resume_${applicant.firstName}_${applicant.lastName}">
+        <i class="fas fa-file-pdf"></i> Download Resume
+      </a>
+    `;
+  }
+
   const modalHTML = `
     <div class="modal-content">
       <div class="modal-header">
@@ -376,12 +389,6 @@ function viewApplicant(applicantId) {
       </div>
 
       <div class="modal-body">
-        <!-- Applicant Photo -->
-        <div class="applicant-image-container">
-         
-        </div>
-
-        <!-- Personal Information -->
         <div class="info-section">
           <h3 class="section-title">Personal Information</h3>
           <div class="info-grid">
@@ -391,7 +398,7 @@ function viewApplicant(applicantId) {
             </div>
             <div class="info-item">
               <label>Date of Birth</label>
-              <div class="info-value">${applicant.dob || 'N/A'}</div>
+              <div class="info-value">${formatDateToMMDDYYYY(applicant.dob) || 'N/A'}</div>
             </div>
             <div class="info-item">
               <label>Address</label>
@@ -408,7 +415,6 @@ function viewApplicant(applicantId) {
           </div>
         </div>
 
-        <!-- Educational Background -->
         <div class="info-section">
           <h3 class="section-title">Educational Background</h3>
           <div class="info-grid">
@@ -420,18 +426,12 @@ function viewApplicant(applicantId) {
               <label>School/University</label>
               <div class="info-value">${applicant.school || 'N/A'}</div>
             </div>
-           
           </div>
         </div>
 
-        <!-- Application Details -->
         <div class="info-section">
           <h3 class="section-title">Application Details</h3>
           <div class="info-grid">
-            <div class="info-item">
-              <label>Position Applied</label>
-              <div class="info-value">${applicant.position || 'N/A'}</div>
-            </div>
             <div class="info-item">
               <label>Application Source</label>
               <div class="info-value">${applicant.source || 'N/A'}</div>
@@ -455,7 +455,6 @@ function viewApplicant(applicantId) {
           </div>
         </div>
 
-        <!-- Additional Information -->
         <div class="info-section">
           <h3 class="section-title">Additional Information</h3>
           <div class="info-grid">
@@ -468,7 +467,7 @@ function viewApplicant(applicantId) {
       </div>
 
       <div class="modal-footer">
-        ${applicant.resumeFile ? '<a href="#" class="btn-resume"><i class="fas fa-file-pdf"></i> View Resume</a>' : ''}
+        ${resumeLink}
         <button class="btn-print" onclick="window.print()">
           <i class="fas fa-print"></i> Print Profile
         </button>
@@ -476,24 +475,15 @@ function viewApplicant(applicantId) {
     </div>
   `;
 
-  // Set the modal content directly
   document.getElementById('appModalContent').innerHTML = modalHTML;
-  
-  // Show the modal
   modal.style.display = 'block';
   document.body.classList.add('modal-open');
-  
-  console.log('View modal should now be visible');
 }
 
 async function openAddApplicantModal() {
-  console.log('Opening add modal...');
-  
   try {
     const response = await fetch('../applicants/addApp.html');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const html = await response.text();
     
     const modal = document.getElementById('addApplicantModal');
@@ -506,27 +496,19 @@ async function openAddApplicantModal() {
     
     modalContent.innerHTML = html;
     
-    // Set today's date as default for applied date
     const today = new Date().toISOString().split('T')[0];
     const appliedDateField = document.querySelector('#addApplicantForm input[name="appliedDate"]');
-    if (appliedDateField) {
-      appliedDateField.value = today;
-    }
+    if (appliedDateField) appliedDateField.value = today;
 
-    // Set up form submission
     const form = document.getElementById('addApplicantForm');
     if (form) {
       form.addEventListener('submit', handleAddApplicant);
     }
 
-    // Initialize file upload
     initFileUpload('resumeFile', 'resumePreview', 'removeResumeBtn');
 
-    // Show modal
     modal.style.display = 'block';
     document.body.classList.add('modal-open');
-    
-    console.log('Add modal opened successfully');
   } catch (error) {
     console.error('Error loading add modal:', error);
     Swal.fire({
@@ -536,7 +518,6 @@ async function openAddApplicantModal() {
     });
   }
 }
-
 async function editApplicant(applicantId) {
   const applicant = applicantsData[applicantId];
   if (!applicant) {
@@ -544,13 +525,9 @@ async function editApplicant(applicantId) {
     return;
   }
 
-  console.log('Opening edit modal for:', applicant.firstName, applicant.lastName);
-
   try {
     const response = await fetch('../applicants/editApp.html');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const html = await response.text();
     
     const modal = document.getElementById('editApplicantModal');
@@ -563,7 +540,6 @@ async function editApplicant(applicantId) {
     
     modalContent.innerHTML = html;
     
-    // Populate form with applicant data
     const fields = {
       'editFirstName': applicant.firstName || '',
       'editLastName': applicant.lastName || '',
@@ -587,18 +563,19 @@ async function editApplicant(applicantId) {
       if (element) element.value = value;
     });
 
-    // Set up resume file preview if exists
+    // Add this line to set up the status change listener
+    setupStatusChangeListener();
+
     if (applicant.resumeFile) {
       const preview = document.getElementById('editResumePreview');
       const removeBtn = document.getElementById('editRemoveResumeBtn');
       if (preview) {
-        preview.textContent = 'Current resume file';
+        preview.textContent = 'Resume already uploaded';
         preview.style.display = 'block';
       }
       if (removeBtn) removeBtn.style.display = 'block';
     }
 
-    // Set up form submission
     const form = document.getElementById('editApplicantForm');
     if (form) {
       form.addEventListener('submit', (e) => {
@@ -607,14 +584,10 @@ async function editApplicant(applicantId) {
       });
     }
 
-    // Initialize file upload
     initFileUpload('editResumeFile', 'editResumePreview', 'editRemoveResumeBtn');
 
-    // Show modal
     modal.style.display = 'block';
     document.body.classList.add('modal-open');
-    
-    console.log('Edit modal opened successfully');
   } catch (error) {
     console.error('Error loading edit modal:', error);
     Swal.fire({
@@ -635,7 +608,6 @@ function initFileUpload(inputId, previewId, removeBtnId) {
   fileInput.addEventListener('change', function() {
     const file = this.files[0];
     if (file) {
-      // Validate file type
       const validTypes = ['application/pdf', 'application/msword', 
                          'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
       if (!validTypes.includes(file.type)) {
@@ -648,7 +620,6 @@ function initFileUpload(inputId, previewId, removeBtnId) {
         return;
       }
 
-      // Validate file size (5MB max)
       if (file.size > 5 * 1024 * 1024) {
         Swal.fire({
           icon: 'warning',
@@ -681,7 +652,6 @@ async function handleAddApplicant(e) {
   const form = e.target;
   const formData = new FormData(form);
 
-  // Validate required fields
   if (!formData.get('firstName') || !formData.get('lastName') || 
       !formData.get('email') || !formData.get('position')) {
     Swal.fire({
@@ -712,7 +682,6 @@ async function handleAddApplicant(e) {
     updatedAt: new Date().toISOString()
   };
 
-  // Handle file upload if exists
   const resumeFile = document.getElementById('resumeFile')?.files[0];
   if (resumeFile) {
     const reader = new FileReader();
@@ -743,6 +712,7 @@ async function handleEditApplicant(applicantId) {
   if (!form) return;
   
   const formData = new FormData(form);
+  const currentApplicant = applicantsData[applicantId];
 
   const applicantData = {
     firstName: formData.get('firstName'),
@@ -763,7 +733,6 @@ async function handleEditApplicant(applicantId) {
     updatedAt: new Date().toISOString()
   };
 
-  // Handle file upload if exists
   const resumeFile = document.getElementById('editResumeFile')?.files[0];
   if (resumeFile) {
     const reader = new FileReader();
@@ -779,6 +748,8 @@ async function handleEditApplicant(applicantId) {
     };
     reader.readAsDataURL(resumeFile);
   } else {
+    // Keep existing resume if no new file was uploaded
+    applicantData.resumeFile = currentApplicant?.resumeFile || null;
     try {
       await updateDoc(doc(db, 'applicants', applicantId), applicantData);
       showSuccess('Applicant updated successfully');
@@ -834,14 +805,11 @@ function closeModal(modalId) {
   if (modal) {
     modal.style.display = 'none';
     document.body.classList.remove('modal-open');
-    console.log('Modal closed:', modalId);
   }
 }
 
-// Make functions available globally
 window.viewApplicant = viewApplicant;
 window.closeModal = closeModal;
-
 
 document.addEventListener('DOMContentLoaded', function() {
   const toggleBtn = document.getElementById('toggleOverview');
@@ -851,17 +819,44 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleBtn.addEventListener('click', function() {
       mainContainer.classList.toggle('overview-hidden');
       
-      
       if (mainContainer.classList.contains('overview-hidden')) {
         toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Show Overview';
       } else {
         toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Overview';
       }
       
-    
       if (!mainContainer.classList.contains('overview-hidden') && applicantsChart) {
-     
+        applicantsChart.update();
       }
     });
   }
 });
+
+function setupStatusChangeListener() {
+  const statusSelect = document.getElementById('editStatus');
+  const finalInterviewField = document.getElementById('editFinalInterview');
+  
+  if (statusSelect && finalInterviewField) {
+    // Initial check
+    if (statusSelect.value === 'Rejected') {
+      finalInterviewField.disabled = true;
+      finalInterviewField.value = '';
+      finalInterviewField.style.opacity = '0.5';
+      finalInterviewField.style.backgroundColor = '#f5f5f5';
+    }
+    
+    // Add event listener for changes
+    statusSelect.addEventListener('change', function() {
+      if (this.value === 'Rejected') {
+        finalInterviewField.disabled = true;
+        finalInterviewField.value = '';
+        finalInterviewField.style.opacity = '0.5';
+        finalInterviewField.style.backgroundColor = '#f5f5f5';
+      } else {
+        finalInterviewField.disabled = false;
+        finalInterviewField.style.opacity = '1';
+        finalInterviewField.style.backgroundColor = '';
+      }
+    });
+  }
+}

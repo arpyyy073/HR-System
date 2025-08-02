@@ -40,7 +40,7 @@
             <span class="status-label">Passed</span><span class="status-count">0</span>
           </div>
           <div class="status-item">
-            <span class="status-label">Pending</span><span class="status-count">0</span>
+            <span class="status-label">In-progress</span><span class="status-count">0</span>
           </div>
           <div class="status-item">
             <span class="status-label">Rejected</span><span class="status-count">0</span>
@@ -68,14 +68,15 @@
 
       <div class="applicants-graph">
         <h3>Applicants Overview</h3>
-        <canvas id="applicantsChart" height="150"></canvas>
+        <div class="chart-container" style="position: relative; height:300px; width:100%">
+          <canvas id="applicantsChart"></canvas>
+        </div>
       </div>
     </div>
 
     <div class="data-table-container">
       <div class="table-header">
         <h2>Applicants List</h2>
-       
         <div>
           <button class="top-btn" id="addApplicantBtn">
             <i class="fa-solid fa-user-plus"></i> Add Applicant
@@ -98,34 +99,32 @@
         </thead>
         <tbody></tbody>
       </table>
-
-      
-
-  <div id="applicantModal" class="modal">
-    <div class="modal-content">
-      <div id="appModalContent"></div>
     </div>
-  </div>
 
-  <div id="addApplicantModal" class="modal">
-    <div class="modal-content">
-      <div id="addAppContent"></div>
+    <div id="applicantModal" class="modal">
+      <div class="modal-content">
+        <div id="appModalContent"></div>
+      </div>
     </div>
-  </div>
 
-  <div id="editApplicantModal" class="modal">
-    <div class="modal-content">
-      <div id="editAppContent"></div>
+    <div id="addApplicantModal" class="modal">
+      <div class="modal-content">
+        <div id="addAppContent"></div>
+      </div>
     </div>
+
+    <div id="editApplicantModal" class="modal">
+      <div class="modal-content">
+        <div id="editAppContent"></div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="module" src="../sidebar/sidebar.js"></script>
+    <script type="module" src="../../js/applicants.js"></script>
   </div>
-
-  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script type="module" src="../sidebar/sidebar.js"></script>
-  <script type="module" src="../../js/applicants.js"></script>
-
-
 </body>
 </html>

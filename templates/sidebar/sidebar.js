@@ -12,7 +12,7 @@ class Sidebar extends HTMLElement {
     if (!existingFavicon) {
       const link = document.createElement("link");
       link.rel = "icon";
-      link.href = "/images/assets/logo.png";
+      link.href = "/images/assets/gpt2.png";
       link.type = "image/png";
       document.head.appendChild(link);
     }
