@@ -105,7 +105,7 @@ async function deleteEmployeeFromFirebase(employeeId) {
     }
 }
 
-function formatPassedate(dateString) {
+function formathireDate(dateString) {
     if (!dateString) return 'N/A';
   
     const date = new Date(dateString);
@@ -139,7 +139,7 @@ function populateEmployeeTable() {
             
             employeesTable.row.add([
                 fullName || 'N/A',
-                employee.Passedate ? formatPassedate(employee.Passedate) : 'N/A',
+                employee.hireDate ? formathireDate(employee.hireDate) : 'N/A',
                 employee.empstatus,
                 employee.email || 'N/A',
                 employee.refer || 'N/A',
@@ -164,28 +164,44 @@ function populateEmployeeTable() {
 
 function showEmployeeDetails(employee) {
     const modal = document.getElementById("employeeModal");
-    if (modal) {
-        const fullName = `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
-        document.getElementById("empName").textContent = fullName || '-';
-        document.getElementById("empDob").textContent = employee.dob || '-';
-        document.getElementById("empAddress").textContent = employee.address || '-';
-        document.getElementById("empPhone").textContent = employee.phone || '-';
-        document.getElementById("empEmail").textContent = employee.email || '-';
-        document.getElementById("empOrg").textContent = employee.org || '-';
-        
-        // Handle department display in view modal
-        const departments = Array.isArray(employee.department) ? 
-            employee.department.join(', ') : 
-            (employee.department || '-');
-        document.getElementById("empDept").textContent = departments;
-        
-        document.getElementById("empRefer").textContent = employee.refer || '-';
-        document.getElementById("empHire").textContent = employee.Passedate ? formatPassedate(employee.Passedate) : '-';
-        document.getElementById("status").textContent = employee.status || '-';
-        document.getElementById("empstatus").textContent = employee.empstatus || '-';
-        modal.style.display = "flex";
-        document.body.style.overflow = "hidden";
+    if (!modal) {
+        console.error("Employee modal not found");
+        return;
     }
+
+    // Helper function to safely set text content
+    function setTextContent(id, value) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = value || '-';
+        } else {
+            console.error(`Element with ID ${id} not found in employee modal`);
+        }
+    }
+
+    const fullName = `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
+    
+    // Set all text contents with null checks
+    setTextContent("empName", fullName);
+    setTextContent("empDob", employee.dob);
+    setTextContent("empAddress", employee.address);
+    setTextContent("empPhone", employee.phone);
+    setTextContent("empEmail", employee.email);
+    setTextContent("empOrg", employee.org);
+    
+    // Handle department display
+    const departments = Array.isArray(employee.department) ? 
+        employee.department.join(', ') : 
+        (employee.department || '-');
+    setTextContent("empDept", departments);
+    
+    setTextContent("empRefer", employee.refer);
+    setTextContent("empHire", employee.hireDate ? formathireDate(employee.hireDate) : '-');
+    setTextContent("status", employee.status);
+    setTextContent("empstatus", employee.empstatus);
+
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
 }
 
 function closeEmployeeModal() {
@@ -215,39 +231,51 @@ function closeAddEmployeeModal() {
 }
 function openEditEmployeeModal(employee, employeeId) {
     const modal = document.getElementById("editEmployeeModal");
-    if (modal) {
-        // Fill form with employee data
-        document.getElementById("editFirstName").value = employee.firstName || '';
-        document.getElementById("editLastName").value = employee.lastName || '';
-        document.getElementById("editDob").value = formatDateForInput(employee.dob) || '';
-        document.getElementById("editAddress").value = employee.address || '';
-        document.getElementById("editPhone").value = employee.phone || '';
-        document.getElementById("editEmail").value = employee.email || '';
-        document.getElementById("editOrg").value = employee.org || '';
-        
-        // Handle department checkboxes - ensure we're working with an array
-        const departmentCheckboxes = modal.querySelectorAll('input[name="department[]"]');
-        let employeeDepartments = [];
-        
-        if (Array.isArray(employee.department)) {
-            employeeDepartments = employee.department;
-        } else if (employee.department) {
-            // If it's a string, split by comma and trim whitespace
-            employeeDepartments = employee.department.split(',').map(dept => dept.trim());
-        }
-        
-        departmentCheckboxes.forEach(checkbox => {
-            checkbox.checked = employeeDepartments.includes(checkbox.value);
-        });
-        
-        document.getElementById("editRefer").value = employee.refer || '';
-        document.getElementById("editPassedate").value = formatDateForInput(employee.Passedate) || '';
-        document.getElementById("editStatus").value = employee.status || '';
-        document.getElementById("editempstatus").value = employee.empstatus || '';
-        modal.setAttribute('data-employee-id', employeeId);
-        modal.style.display = "block";
-        document.body.style.overflow = "hidden";
+    if (!modal) {
+        console.error("Edit employee modal not found");
+        return;
     }
+
+    // Helper function to safely set values
+    function setValue(id, value) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.value = value || '';
+        } else {
+            console.error(`Element with ID ${id} not found`);
+        }
+    }
+
+    // Set all form values with null checks
+    setValue("editFirstName", employee.firstName);
+    setValue("editLastName", employee.lastName);
+    setValue("editDob", formatDateForInput(employee.dob));
+    setValue("editAddress", employee.address);
+    setValue("editPhone", employee.phone);
+    setValue("editEmail", employee.email);
+    setValue("editOrg", employee.org);
+    setValue("editRefer", employee.refer);
+    setValue("edithireDate", formatDateForInput(employee.hireDate));
+    setValue("editStatus", employee.status);
+    setValue("editempstatus", employee.empstatus);
+
+    // Handle department checkboxes
+    const departmentCheckboxes = modal.querySelectorAll('input[name="department[]"]');
+    let employeeDepartments = [];
+    
+    if (Array.isArray(employee.department)) {
+        employeeDepartments = employee.department;
+    } else if (employee.department) {
+        employeeDepartments = employee.department.split(',').map(dept => dept.trim());
+    }
+    
+    departmentCheckboxes.forEach(checkbox => {
+        checkbox.checked = employeeDepartments.includes(checkbox.value);
+    });
+
+    modal.setAttribute('data-employee-id', employeeId);
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden";
 }
 
 function closeEditEmployeeModal() {
@@ -282,7 +310,7 @@ function handleAddEmployeeForm(event) {
         org: formData.get('org'),
         department: departments,
         refer: formData.get('ref'),
-        Passedate: formData.get('Passedate'),
+        hireDate: formData.get('hireDate'),
         status: formData.get('status'),
         empstatus: formData.get('empstatus')
     };
@@ -339,7 +367,7 @@ async function handleEditEmployeeForm(event) {
         org: formData.get('org'),
         department: departments,
         refer: formData.get('refer'),
-        Passedate: formData.get('Passedate'),
+        hireDate: formData.get('hireDate'),
         status: formData.get('status'),
         empstatus: formData.get('empstatus'),
         updatedAt: new Date().toISOString()
@@ -393,15 +421,11 @@ function initializeModals() {
 
     // Load edit employee modal
     fetch('editEmp.html')
-        .then(response => response.text())
-        .then(html => {
-            document.body.insertAdjacentHTML('beforeend', html);
-            // Add form submission handler
-            const editForm = document.getElementById('editEmployeeForm');
-            if (editForm) {
-                editForm.addEventListener('submit', handleEditEmployeeForm);
-            }
-        })
+    .then(response => response.text())
+    .then(html => {
+        console.log("Edit modal HTML loaded");
+        document.body.insertAdjacentHTML('beforeend', html);
+    })
         .catch(console.error);
 }
 
@@ -448,7 +472,7 @@ function setupFilters() {
         employeesTable.column(5).search(this.value).draw();
     });
 
-    $("#filterPassedate").on("change", function () {
+    $("#filterhireDate").on("change", function () {
         employeesTable.column(1).search(this.value).draw();
     });
 }
