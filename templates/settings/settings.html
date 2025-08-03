@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings - HR Management System</title>
+    <link rel="stylesheet" href="../../style/settings.css" />
+    <link rel="stylesheet" href="../../style/sidebar.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+
+  <body>
+    <main-sidebar></main-sidebar>
+
+    <div class="wrap-container">
+      <div class="settings-container">
+        <div class="settings-header">
+          <h1><i class="fas fa-cog"></i> HR Settings</h1>
+          <p>Manage your HR system configuration and preferences</p>
+        </div>
+
+        <div class="settings-tabs">
+          <button class="tab-button active" data-tab="company">Company Info</button>
+          <button class="tab-button" data-tab="departments">Departments</button>
+          <button class="tab-button" data-tab="organizations">Organizations</button>
+          <button class="tab-button" data-tab="statuses">Employee Status</button>
+          <button class="tab-button" data-tab="notifications">Notifications</button>
+        </div>
+
+        <!-- Company Information Tab -->
+        <div id="company-tab" class="tab-content active">
+          <div class="settings-section">
+            <h3 class="section-title">Company Information</h3>
+            <form id="company-form">
+              <div class="form-group">
+                <label for="company-name">Company Name</label>
+                <input type="text" id="company-name" placeholder="Enter company name" value="Hyacinth HR Management">
+              </div>
+              <div class="form-group">
+                <label for="company-address">Address</label>
+                <textarea id="company-address" rows="3" placeholder="Enter company address"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="company-phone">Phone</label>
+                <input type="tel" id="company-phone" placeholder="Enter phone number">
+              </div>
+              <div class="form-group">
+                <label for="company-email">Email</label>
+                <input type="email" id="company-email" placeholder="Enter company email">
+              </div>
+              <div class="form-group">
+                <label for="company-website">Website</label>
+                <input type="url" id="company-website" placeholder="Enter website URL">
+              </div>
+              <button type="submit" class="btn">Save Company Information</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Departments Tab -->
+        <div id="departments-tab" class="tab-content">
+          <div class="settings-section">
+            <h3 class="section-title">Department Management</h3>
+            <div class="form-group">
+              <label for="new-department">Add New Department</label>
+              <div style="display: flex; gap: 10px;">
+                <input type="text" id="new-department" placeholder="Enter department name">
+                <button type="button" class="btn" onclick="addDepartment()">Add</button>
+              </div>
+            </div>
+            <div class="department-list" id="department-list">
+              <!-- Departments will be loaded here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Organizations Tab -->
+        <div id="organizations-tab" class="tab-content">
+          <div class="settings-section">
+            <h3 class="section-title">Organization Settings</h3>
+            <div class="organization-grid">
+              <div class="org-card">
+                <h4>RAHYO</h4>
+                <div class="form-group">
+                  <label for="rahyo-description">Description</label>
+                  <textarea id="rahyo-description" rows="3" placeholder="Enter RAHYO description"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="rahyo-head">Department Head</label>
+                  <input type="text" id="rahyo-head" placeholder="Enter department head name">
+                </div>
+                <button type="button" class="btn" onclick="saveOrganization('rahyo')">Save RAHYO Settings</button>
+              </div>
+              
+              <div class="org-card">
+                <h4>HHI</h4>
+                <div class="form-group">
+                  <label for="hhi-description">Description</label>
+                  <textarea id="hhi-description" rows="3" placeholder="Enter HHI description"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="hhi-head">Department Head</label>
+                  <input type="text" id="hhi-head" placeholder="Enter department head name">
+                </div>
+                <button type="button" class="btn" onclick="saveOrganization('hhi')">Save HHI Settings</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Employee Status Tab -->
+        <div id="statuses-tab" class="tab-content">
+          <div class="settings-section">
+            <h3 class="section-title">Employee Status Categories</h3>
+            <div class="form-group">
+              <label for="new-status">Add New Status</label>
+              <div style="display: flex; gap: 10px;">
+                <input type="text" id="new-status" placeholder="Enter status name">
+                <button type="button" class="btn" onclick="addStatus()">Add Status</button>
+              </div>
+            </div>
+            <div class="status-list" id="status-list">
+              <!-- Status tags will be loaded here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications Tab -->
+        <div id="notifications-tab" class="tab-content">
+          <div class="settings-section">
+            <h3 class="section-title">Notification Settings</h3>
+            
+            <div class="notification-setting">
+              <div class="notification-info">
+                <h4>Intern Evaluation Reminder</h4>
+                <p>Get notified when interns reach the evaluation threshold</p>
+              </div>
+              <div class="notification-controls">
+                <input type="number" id="intern-threshold" class="threshold-input" value="15" min="1" max="365">
+                <span>days</span>
+                <div class="toggle-switch active" data-setting="intern-notifications"></div>
+              </div>
+            </div>
+
+            <div class="notification-setting">
+              <div class="notification-info">
+                <h4>Employee Birthday Reminders</h4>
+                <p>Get notified about upcoming employee birthdays</p>
+              </div>
+              <div class="notification-controls">
+                <input type="number" id="birthday-threshold" class="threshold-input" value="7" min="1" max="30">
+                <span>days before</span>
+                <div class="toggle-switch" data-setting="birthday-notifications"></div>
+              </div>
+            </div>
+
+            <div class="notification-setting">
+              <div class="notification-info">
+                <h4>Work Anniversary Alerts</h4>
+                <p>Get notified about employee work anniversaries</p>
+              </div>
+              <div class="notification-controls">
+                <input type="number" id="anniversary-threshold" class="threshold-input" value="14" min="1" max="30">
+                <span>days before</span>
+                <div class="toggle-switch" data-setting="anniversary-notifications"></div>
+              </div>
+            </div>
+
+            <button type="button" class="btn" onclick="saveNotificationSettings()">Save Notification Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="../sidebar/sidebar.js"></script>
+    
+    <!-- Enhanced Authentication Guard -->
+    <script type="module">
+      import { enforceAuthRedirect } from "../utils/authGuard.js";
+      
+      // Initialize enhanced auth guard with session management
+      enforceAuthRedirect({
+        sessionTimeoutMinutes: 30,  // 30 minutes of inactivity
+        warningMinutes: 5,          // Show warning 5 minutes before timeout
+        checkIntervalSeconds: 60    // Check every minute
+      });
+    </script>
+
+    <script type="module" src="../../js/settings.js"></script>
+    <script type="module" src="../../js/sidebar.js"></script>
+    <script type="module">
+      import { enforceAuthRedirect } from "../utils/authGuard.js";
+      
+      // Initialize enhanced auth guard with session management
+      enforceAuthRedirect({
+        sessionTimeoutMinutes: 30,  // 30 minutes of inactivity
+        warningMinutes: 5,          // Show warning 5 minutes before timeout
+        checkIntervalSeconds: 60    // Check every minute
+      });
+    </script>
+  </body>
+</html>

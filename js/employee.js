@@ -10,9 +10,42 @@ import {
     onSnapshot,
     query
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// Firebase Auth is handled by authGuard.js - no direct auth imports needed
 
 let employeesTable;
 let employeesData = {};
+let isInitialLoad = true;
+let loadingIndicator = null;
+
+// Cache configuration
+const CACHE_KEY = 'employeesCache';
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Storage monitoring function
+function getStorageInfo() {
+    try {
+        let totalSize = 0;
+        let itemCount = 0;
+        
+        for (let key in localStorage) {
+            if (localStorage.hasOwnProperty(key)) {
+                totalSize += localStorage[key].length + key.length;
+                itemCount++;
+            }
+        }
+        
+        const totalSizeKB = (totalSize / 1024).toFixed(1);
+        const estimatedQuotaMB = 5; // Most browsers allow ~5-10MB
+        const usagePercent = ((totalSize / (estimatedQuotaMB * 1024 * 1024)) * 100).toFixed(1);
+        
+        console.log(`📊 localStorage: ${totalSizeKB}KB used (~${usagePercent}% of estimated ${estimatedQuotaMB}MB quota), ${itemCount} items`);
+        
+        return { totalSize, totalSizeKB, usagePercent, itemCount };
+    } catch (error) {
+        console.error('❌ Error checking storage info:', error);
+        return null;
+    }
+}
 
 function formatDateToMMDDYYYY(dateString) {
     if (!dateString) return '';
@@ -55,16 +88,245 @@ document.addEventListener('DOMContentLoaded', function() {
     loadEmployeesFromFirebase();
 });
 
-function loadEmployeesFromFirebase() {
+// Cache management functions
+function getCachedData() {
+    try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (!cached) {
+            console.log('📄 No cached data found');
+            return null;
+        }
+        
+        const cacheData = JSON.parse(cached);
+        const { data, timestamp, count, partial } = cacheData;
+        
+        if (Date.now() - timestamp > CACHE_DURATION) {
+            console.log('⏰ Cache expired, removing old data');
+            localStorage.removeItem(CACHE_KEY);
+            return null;
+        }
+        
+        const cacheAge = Math.round((Date.now() - timestamp) / 1000);
+        console.log(`💾 Loading ${count || Object.keys(data).length} employees from cache (${cacheAge}s old${partial ? ', partial data' : ''})`);
+        
+        return data;
+    } catch (error) {
+        console.error('❌ Error reading cache:', error);
+        localStorage.removeItem(CACHE_KEY);
+        return null;
+    }
+}
+
+function setCachedData(data) {
+    try {
+        // Only cache essential fields to reduce storage size
+        const essentialData = {};
+        Object.keys(data).forEach(id => {
+            const employee = data[id];
+            essentialData[id] = {
+                firstName: employee.firstName,
+                lastName: employee.lastName,
+                email: employee.email,
+                hireDate: employee.hireDate,
+                empstatus: employee.empstatus,
+                status: employee.status,
+                refer: employee.refer,
+                org: employee.org,
+                department: employee.department
+            };
+        });
+        
+        const cacheData = {
+            data: essentialData,
+            timestamp: Date.now(),
+            count: Object.keys(essentialData).length
+        };
+        
+        const cacheString = JSON.stringify(cacheData);
+        
+        // Check if cache size is reasonable (< 4MB)
+        if (cacheString.length > 4 * 1024 * 1024) {
+            console.warn('⚠️ Cache data too large, skipping cache');
+            return;
+        }
+        
+        localStorage.setItem(CACHE_KEY, cacheString);
+        console.log(`💾 Cached ${Object.keys(essentialData).length} employees (${(cacheString.length / 1024).toFixed(1)}KB)`);
+        
+    } catch (error) {
+        if (error.name === 'QuotaExceededError') {
+            console.warn('⚠️ localStorage quota exceeded, clearing old cache and retrying...');
+            // Clear old cache and try again with minimal data
+            localStorage.removeItem(CACHE_KEY);
+            
+            // Try to clear other potential cache items
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.includes('Cache')) {
+                    keysToRemove.push(key);
+                }
+            }
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            
+            // Try caching again with even more minimal data
+            try {
+                const minimalData = {};
+                Object.keys(data).slice(0, 100).forEach(id => { // Only cache first 100 employees
+                    const employee = data[id];
+                    minimalData[id] = {
+                        firstName: employee.firstName,
+                        lastName: employee.lastName,
+                        email: employee.email,
+                        status: employee.status
+                    };
+                });
+                
+                localStorage.setItem(CACHE_KEY, JSON.stringify({
+                    data: minimalData,
+                    timestamp: Date.now(),
+                    partial: true
+                }));
+                console.log('💾 Cached minimal data (first 100 employees)');
+            } catch (retryError) {
+                console.warn('❌ Unable to cache even minimal data:', retryError.message);
+            }
+        } else {
+            console.error('❌ Error setting cache:', error);
+        }
+    }
+}
+
+function showLoadingIndicator() {
+    if (loadingIndicator) return;
+    
+    const tableContainer = document.querySelector('.data-table-container');
+    if (!tableContainer) return;
+    
+    loadingIndicator = document.createElement('div');
+    loadingIndicator.className = 'table-loading-overlay';
+    loadingIndicator.innerHTML = `
+        <div class="table-loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading employees...</p>
+        </div>
+    `;
+    
+    // Add loading styles if not already present
+    if (!document.getElementById('table-loading-styles')) {
+        const style = document.createElement('style');
+        style.id = 'table-loading-styles';
+        style.textContent = `
+            .data-table-container {
+                position: relative;
+            }
+            .table-loading-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.9);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 100;
+                min-height: 200px;
+            }
+            .table-loading-spinner {
+                text-align: center;
+                color: #666;
+            }
+            .table-loading-spinner i {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+                color: #007bff;
+            }
+            .table-loading-spinner p {
+                margin: 0;
+                font-size: 0.9rem;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    tableContainer.appendChild(loadingIndicator);
+}
+
+function hideLoadingIndicator() {
+    if (loadingIndicator) {
+        loadingIndicator.remove();
+        loadingIndicator = null;
+    }
+}
+
+// Alternative: Show loading directly in table rows
+function showTableRowLoading() {
+    if (!employeesTable) return;
+    
+    employeesTable.clear();
+    
+    // Add a loading row
+    employeesTable.row.add([
+        '<div style="display: flex; align-items: center; gap: 8px;"><i class="fas fa-spinner fa-spin" style="color: #007bff;"></i> Loading employees...</div>',
+        '', '', '', '', '', ''
+    ]);
+    
+    employeesTable.draw();
+}
+
+function hideTableRowLoading() {
+    if (employeesTable) {
+        employeesTable.clear().draw();
+    }
+}
+
+// Authentication is handled by authGuard.js in the HTML file
+// No need for additional auth checks in this module
+
+async function loadEmployeesFromFirebase() {
+    // Authentication is handled by authGuard.js
+    // Check storage status
+    getStorageInfo();
+    
+    // Try to load from cache first for immediate display
+    const cachedData = getCachedData();
+    if (cachedData && isInitialLoad) {
+        employeesData = cachedData;
+        populateEmployeeTable();
+        isInitialLoad = false;
+    } else if (isInitialLoad) {
+        showTableRowLoading();
+    }
+    
+    // Set up real-time listener for fresh data
     const q = query(collection(db, 'employees'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        employeesData = {};
+        console.log('🔄 Receiving fresh data from Firebase...');
+        
+        const newData = {};
         querySnapshot.forEach((doc) => {
-            employeesData[doc.id] = doc.data();
+            newData[doc.id] = doc.data();
         });
-        populateEmployeeTable();
+        
+        // Only update if data actually changed
+        if (JSON.stringify(newData) !== JSON.stringify(employeesData)) {
+            employeesData = newData;
+            setCachedData(employeesData);
+            
+            // Use requestAnimationFrame for smooth UI updates
+            requestAnimationFrame(() => {
+                populateEmployeeTable();
+                if (isInitialLoad) {
+                    isInitialLoad = false;
+                }
+            });
+        } else if (isInitialLoad) {
+            isInitialLoad = false;
+        }
     }, (error) => {
         console.error('Error loading employees:', error);
+        hideTableRowLoading();
         Swal.fire({
             icon: 'error',
             title: 'Database Error',
@@ -76,31 +338,68 @@ function loadEmployeesFromFirebase() {
 }
 
 async function addEmployeeToFirebase(employeeData) {
+    if (!checkAuthStatus()) {
+        throw new Error('User not authenticated');
+    }
+    
     try {
         const docRef = await addDoc(collection(db, 'employees'), {
             ...employeeData,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         });
+        console.log('✅ Employee added successfully');
         return docRef.id;
     } catch (error) {
-        console.error('Error adding employee:', error);
+        console.error('❌ Error adding employee:', error);
+        if (error.code === 'permission-denied') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Permission Denied',
+                text: 'You do not have permission to add employees. Please check your authentication.'
+            });
+        }
         throw error;
     }
 }
 async function updateEmployeeInFirebase(employeeId, employeeData) {
+    if (!checkAuthStatus()) {
+        throw new Error('User not authenticated');
+    }
+    
     try {
         await updateDoc(doc(db, 'employees', employeeId), employeeData);
+        console.log('✅ Employee updated successfully');
     } catch (error) {
-        console.error('Error updating employee:', error);
-        throw error; // This allows the calling function to catch the error
+        console.error('❌ Error updating employee:', error);
+        if (error.code === 'permission-denied') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Permission Denied',
+                text: 'You do not have permission to update employees. Please check your authentication.'
+            });
+        }
+        throw error;
     }
 }
+
 async function deleteEmployeeFromFirebase(employeeId) {
+    if (!checkAuthStatus()) {
+        throw new Error('User not authenticated');
+    }
+    
     try {
         await deleteDoc(doc(db, 'employees', employeeId));
+        console.log('✅ Employee deleted successfully');
     } catch (error) {
-        console.error('Error deleting employee:', error);
+        console.error('❌ Error deleting employee:', error);
+        if (error.code === 'permission-denied') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Permission Denied',
+                text: 'You do not have permission to delete employees. Please check your authentication.'
+            });
+        }
         throw error;
     }
 }
@@ -119,47 +418,84 @@ function formathireDate(dateString) {
 }
   
 function populateEmployeeTable() {
-    if (employeesTable) {
-        employeesTable.clear();
+    if (!employeesTable) return;
+    
+    // Use batch processing for better performance
+    const startTime = performance.now();
+    console.log('🔄 Updating employee table...');
+    
+    // Clear existing data
+    employeesTable.clear();
+    
+    // Prepare rows in batches to avoid blocking the UI
+    const employees = Object.entries(employeesData);
+    const batchSize = 50;
+    let currentBatch = 0;
+    
+    function processBatch() {
+        const start = currentBatch * batchSize;
+        const end = Math.min(start + batchSize, employees.length);
         
-        Object.keys(employeesData).forEach(employeeId => {
-            const employee = employeesData[employeeId];
-            const fullName = `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
-            
-            const empstatus = Array.isArray(employee.empstatus) ? 
-                employee.empstatus.join(', ') : 
-                (employee.empstatus || 'N/A');
-            
-            const safeEmployeeData = {
-                ...employee,
-                empstatus: empstatus
-            };
-            
-            const employeeDataJson = JSON.stringify(safeEmployeeData).replace(/"/g, '&quot;');
-            
-            employeesTable.row.add([
-                fullName || 'N/A',
-                employee.hireDate ? formathireDate(employee.hireDate) : 'N/A',
-                employee.empstatus,
-                employee.email || 'N/A',
-                employee.refer || 'N/A',
-                `<span class="status-badge status-${employee.status?.toLowerCase() || 'inactive'}">${employee.status || 'Inactive'}</span>`,
-                `<div class="action-btns">
-                    <button class="view-btn icon-btn" title="View" data-employee="${employeeDataJson}">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="edit-btn icon-btn" title="Edit" data-employee="${employeeDataJson}" data-id="${employeeId}">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button class="delete-btn icon-btn" title="Delete" data-id="${employeeId}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>`
-            ]);
-        });
+        for (let i = start; i < end; i++) {
+            const [employeeId, employee] = employees[i];
+            addEmployeeRow(employeeId, employee);
+        }
         
+        currentBatch++;
+        
+        if (end < employees.length) {
+            // Process next batch in next frame
+            requestAnimationFrame(processBatch);
+        } else {
+            // All batches processed, draw the table
+            employeesTable.draw();
+            const endTime = performance.now();
+            console.log(`✅ Table updated in ${(endTime - startTime).toFixed(2)}ms`);
+        }
+    }
+    
+    // Start processing batches
+    if (employees.length > 0) {
+        processBatch();
+    } else {
         employeesTable.draw();
     }
+}
+
+// Optimized function to add a single employee row
+function addEmployeeRow(employeeId, employee) {
+    const fullName = `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
+    
+    const empstatus = Array.isArray(employee.empstatus) ? 
+        employee.empstatus.join(', ') : 
+        (employee.empstatus || 'N/A');
+    
+    // Store employee data in a more efficient way (avoid JSON serialization)
+    const employeeKey = `emp_${employeeId}`;
+    window[employeeKey] = {
+        ...employee,
+        empstatus: empstatus
+    };
+    
+    employeesTable.row.add([
+        fullName || 'N/A',
+        employee.hireDate ? formathireDate(employee.hireDate) : 'N/A',
+        empstatus,
+        employee.email || 'N/A',
+        employee.refer || 'N/A',
+        `<span class="status-badge status-${employee.status?.toLowerCase() || 'inactive'}">${employee.status || 'Inactive'}</span>`,
+        `<div class="action-btns">
+            <button class="view-btn icon-btn" title="View" data-employee-key="${employeeKey}">
+                <i class="fas fa-eye"></i>
+            </button>
+            <button class="edit-btn icon-btn" title="Edit" data-employee-key="${employeeKey}" data-id="${employeeId}">
+                <i class="fas fa-pen"></i>
+            </button>
+            <button class="delete-btn icon-btn" title="Delete" data-id="${employeeId}">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>`
+    ]);
 }
 
 function showEmployeeDetails(employee) {
@@ -489,14 +825,13 @@ function setupEventListeners() {
         // Handle View button clicks
         if (event.target.closest('.view-btn')) {
             const button = event.target.closest('.view-btn');
-            try {
-                const employeeDataAttr = button.getAttribute('data-employee');
-                // Unescape the JSON data
-                const unescapedData = employeeDataAttr.replace(/&quot;/g, '"');
-                const employeeData = JSON.parse(unescapedData);
+            const employeeKey = button.getAttribute('data-employee-key');
+            const employeeData = window[employeeKey];
+            
+            if (employeeData) {
                 showEmployeeDetails(employeeData);
-            } catch (error) {
-                console.error('Error parsing employee data:', error);
+            } else {
+                console.error('Employee data not found for key:', employeeKey);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -509,14 +844,13 @@ function setupEventListeners() {
         if (event.target.closest('.edit-btn')) {
             const button = event.target.closest('.edit-btn');
             const employeeId = button.getAttribute('data-id');
-            try {
-                const employeeDataAttr = button.getAttribute('data-employee');
-                // Unescape the JSON data
-                const unescapedData = employeeDataAttr.replace(/&quot;/g, '"');
-                const employeeData = JSON.parse(unescapedData);
+            const employeeKey = button.getAttribute('data-employee-key');
+            const employeeData = window[employeeKey];
+            
+            if (employeeData) {
                 openEditEmployeeModal(employeeData, employeeId);
-            } catch (error) {
-                console.error('Error parsing employee data:', error);
+            } else {
+                console.error('Employee data not found for key:', employeeKey);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',

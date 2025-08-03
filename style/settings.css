@@ -1,0 +1,254 @@
+ /* Settings Page Styles */
+ .settings-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .settings-header {
+    margin-bottom: 30px;
+  }
+  
+  .settings-header h1 {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  
+  .settings-tabs {
+    display: flex;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 30px;
+  }
+  
+  .tab-button {
+    background: none;
+    border: none;
+    padding: 15px 25px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .tab-button.active {
+    color: #4a90e2;
+    border-bottom-color: #4a90e2;
+  }
+  
+  .tab-content {
+    display: none;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }
+  
+  .settings-section {
+    background: white;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  .section-title {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #4a90e2;
+  }
+  
+  .btn {
+    background: #4a90e2;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease;
+  }
+  
+  .btn:hover {
+    background: #357abd;
+  }
+  
+  .btn-danger {
+    background: #e74c3c;
+  }
+  
+  .btn-danger:hover {
+    background: #c0392b;
+  }
+  
+  .btn-success {
+    background: #27ae60;
+  }
+  
+  .btn-success:hover {
+    background: #229954;
+  }
+  
+  .department-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 15px;
+  }
+  
+  .department-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .department-item:last-child {
+    border-bottom: none;
+  }
+  
+  .department-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .organization-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .org-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .org-card:hover {
+    border-color: #4a90e2;
+  }
+  
+  .status-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .status-tag {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .status-tag .remove-status {
+    cursor: pointer;
+    color: #e74c3c;
+  }
+  
+  .notification-setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    margin-bottom: 15px;
+  }
+  
+  .notification-info h4 {
+    margin: 0 0 5px 0;
+    color: #333;
+  }
+  
+  .notification-info p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .notification-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 25px;
+    background: #ccc;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .toggle-switch.active {
+    background: #4a90e2;
+  }
+  
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 21px;
+    height: 21px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+  
+  .toggle-switch.active::after {
+    transform: translateX(25px);
+  }
+  
+  .threshold-input {
+    width: 80px;
+    text-align: center;
+  }

@@ -7,113 +7,9 @@ import {
     where,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-function parseHireDate(hireDateStr) {
-  const [month, day, year] = hireDateStr.split("-");
-  return new Date(`${year}-${month}-${day}`);
-}
 
-function getDaysSince(date) {
-  const now = new Date();
-  const diffInMs = now - date;
-  return Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-}
 
-async function fetchDeployNotifications() {
-  const internsRef = collection(db, "employees");
-  const q = query(internsRef, where("department", "==", "Internship"));
 
-  const snapshot = await getDocs(q);
-
-  let deployReadyCount = 0;
-  let deployReadyInterns = [];
-
-  snapshot.forEach(doc => {
-    const data = doc.data();
-    if (!data.hireDate || !data.firstName || !data.lastName) return;
-
-    const hireDate = parseHireDate(data.hireDate);
-    const daysPassed = getDaysSince(hireDate);
-
-    if (daysPassed >= 15) {
-      deployReadyCount++;
-      deployReadyInterns.push({
-        name: `${data.firstName} ${data.lastName}`,
-        email: data.email,
-        daysPassed,
-        org: data.org,
-        id: doc.id
-      });
-    }
-  });
-
-  document.querySelector(".notification-count").textContent = deployReadyCount;
-  document.querySelector(".notification").addEventListener("click", () => {
-    if (deployReadyCount === 0) {
-      Swal.fire("No Deployment Alerts", "No interns are ready for deployment today.", "info");
-      return;
-    }
-
-    const internHtml = deployReadyInterns
-      .map(i => `<p><strong>${i.name}</strong> (${i.email})<br><small>${i.daysPassed} days since hire • ${i.org}</small></p>`)
-      .join("<hr>");
-
-    Swal.fire({
-      title: "Interns Ready for Deployment",
-      html: internHtml,
-      icon: "info",
-      width: 600,
-      confirmButtonText: "OK"
-    });
-  });
-}
-
-fetchDeployNotifications();
-
-async function fetchOnboardingNotifications() {
-  const employeesRef = collection(db, "employees");
-  const q = query(employeesRef, where("department", "!=", "")); // Get all employees with a department
-
-  const snapshot = await getDocs(q);
-
-  let onboardingSoon = [];
-
-  snapshot.forEach(doc => {
-    const data = doc.data();
-    if (!data.hireDate || !data.firstName || !data.lastName) return;
-
-    const hireDate = parseHireDate(data.hireDate);
-    const now = new Date();
-    const diffDays = Math.ceil((hireDate - now) / (1000 * 60 * 60 * 24));
-
-    if (diffDays > 0 && diffDays <= 2) {
-      onboardingSoon.push({
-        name: `${data.firstName} ${data.lastName}`,
-        email: data.email,
-        daysUntil: diffDays,
-        org: data.org,
-        id: doc.id
-      });
-    }
-  });
-
-  if (onboardingSoon.length > 0) {
-    document.querySelector(".onboarding-notification-count").textContent = onboardingSoon.length;
-    document.querySelector(".onboarding-notification").addEventListener("click", () => {
-      const html = onboardingSoon
-        .map(i => `<p><strong>${i.name}</strong> (${i.email})<br><small>Onboarding in ${i.daysUntil} day(s) • ${i.org}</small></p>`)
-        .join("<hr>");
-      Swal.fire({
-        title: "Upcoming Onboardings",
-        html,
-        icon: "info",
-        width: 600,
-        confirmButtonText: "OK"
-      });
-    });
-  }
-}
-
-fetchOnboardingNotifications();
 
 document.addEventListener("DOMContentLoaded", () => {
     // Cache configuration
@@ -123,6 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Employee data cache
     let allEmployeesCache = [];
     let lastFetchTime = 0;
+    
+    // Notification data
+    let internNotifications = [];
+    let notificationCount = 0;
     
     // Counters
     const deptCounters = {
@@ -285,6 +185,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 lastFetchTime = now;
                 updateAllCounters();
                 updateCache();
+                
+                // Check for intern notifications
+                checkInternNotifications();
             }
         } catch (error) {
             console.error("Error fetching fresh data from Firestore:", error);
@@ -485,6 +388,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         }
+        
+        // Notification icon click
+        const notificationIcon = document.querySelector('.notification-icon');
+        if (notificationIcon) {
+            notificationIcon.addEventListener('click', toggleNotificationModal);
+        }
+        
+        // Notification modal close button
+        const closeNotificationBtn = document.getElementById('closeNotificationModal');
+        if (closeNotificationBtn) {
+            closeNotificationBtn.addEventListener('click', closeNotificationModal);
+        }
     }
 
     function setupRealtimeListener() {
@@ -509,6 +424,116 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
             toast.remove();
         }, 3000);
+    }
+    
+    // Notification Functions
+    function checkInternNotifications() {
+        internNotifications = [];
+        const currentDate = new Date();
+        
+        allEmployeesCache.forEach(employee => {
+            // Check if employee is an intern and has a hire date
+            if (employee.department && 
+                normalizeString(employee.department) === 'internship' &&
+                employee.hireDate &&
+                (!employee.status || normalizeString(employee.status) === 'active')) {
+                
+                let hireDate;
+                
+                // Handle different date formats
+                if (employee.hireDate.toDate) {
+                    // Firestore Timestamp
+                    hireDate = employee.hireDate.toDate();
+                } else if (typeof employee.hireDate === 'string') {
+                    // String date
+                    hireDate = new Date(employee.hireDate);
+                } else if (employee.hireDate instanceof Date) {
+                    // Already a Date object
+                    hireDate = employee.hireDate;
+                } else {
+                    // Skip if we can't parse the date
+                    return;
+                }
+                
+                // Calculate days since hire
+                const timeDiff = currentDate.getTime() - hireDate.getTime();
+                const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+                
+                // If intern has been working for 15 or more days
+                if (daysDiff >= 15) {
+                    internNotifications.push({
+                        id: employee.id,
+                        name: employee.firstName || 'Unknown',
+                        email: employee.email || 'No email',
+                        hireDate: hireDate,
+                        daysWorked: daysDiff
+                    });
+                }
+            }
+        });
+        
+        notificationCount = internNotifications.length;
+        updateNotificationBadge();
+        updateNotificationModal();
+    }
+    
+    function updateNotificationBadge() {
+        const notificationIcon = document.querySelector('.notification-icon');
+        if (!notificationIcon) return;
+        
+        // Remove existing badge
+        const existingBadge = notificationIcon.querySelector('.notification-badge');
+        if (existingBadge) {
+            existingBadge.remove();
+        }
+        
+        // Add badge if there are notifications
+        if (notificationCount > 0) {
+            const badge = document.createElement('span');
+            badge.className = 'notification-badge';
+            badge.textContent = notificationCount > 99 ? '99+' : notificationCount;
+            notificationIcon.appendChild(badge);
+        }
+    }
+    
+    function updateNotificationModal() {
+        const notificationBody = document.getElementById('notificationBody');
+        if (!notificationBody) return;
+        
+        if (internNotifications.length === 0) {
+            notificationBody.innerHTML = '<div class="no-notifications">No notifications at this time</div>';
+            return;
+        }
+        
+        let notificationHTML = '';
+        internNotifications.forEach(intern => {
+            const formattedDate = intern.hireDate.toLocaleDateString();
+            notificationHTML += `
+                <div class="notification-item">
+                    <h4>${intern.name}</h4>
+                    <p><strong>Email:</strong> ${intern.email}</p>
+                    <p><strong>Hire Date:</strong> ${formattedDate}</p>
+                    <p class="days-info">Has been working for ${intern.daysWorked} days</p>
+                    <p>This intern may need evaluation or transition planning.</p>
+                </div>
+            `;
+        });
+        
+        notificationBody.innerHTML = notificationHTML;
+    }
+    
+    function toggleNotificationModal() {
+        const modal = document.getElementById('notificationModal');
+        if (modal) {
+            modal.classList.toggle('show');
+        }
+    }
+    
+    function closeNotificationModal() {
+        const modal = document.getElementById('notificationModal');
+        if (modal) {
+            modal.classList.remove('show');
+        }
     }
 
     // Initialize the dashboard

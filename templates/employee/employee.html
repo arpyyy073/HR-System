@@ -39,7 +39,6 @@
         </div>
       </div>
 
-      <!-- Filter Section -->
       <div class="filter-buttons">
         <select id="filterEmpStatus">
           <option value="">All Employment Status</option>
@@ -73,7 +72,21 @@
       </div>
     </div>
 
+    <link rel="preload" href="../../js/employee.js" as="script">
+    <link rel="preload" href="../../js/firebase-config.js" as="script">
+    
     <script type="module" src="../sidebar/sidebar.js"></script>
-    <script type="module" src="../../js/employee.js"></script>
+    <script type="module">
+      import { enforceAuthRedirect } from "../utils/authGuard.js";
+      
+
+      enforceAuthRedirect({
+        sessionTimeoutMinutes: 30,  
+        warningMinutes: 5,          
+        checkIntervalSeconds: 60    
+      });
+    </script>
+    
+    <script type="module" src="../../js/employee.js?v=5"></script>
   </body>
 </html>

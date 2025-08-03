@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Simple loader animation for login button
 document.getElementById('login-button').addEventListener('click', function() {
   const loader = document.createElement('span');
   loader.style.width = '18px';

@@ -10,11 +10,25 @@ import {
   query,
   orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 // Global variables
 let applicantsTable;
 let applicantsChart = null;
 let applicantsData = {};
+
+// Check if user is authenticated
+function checkAuthStatus() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    
+    if (!user) {
+        console.error('❌ User not authenticated');
+        return false;
+    }
+    
+    return true;
+}
 
 // Date formatting functions
 function formatDateToMMDDYYYY(dateString) {
@@ -646,6 +660,17 @@ function initFileUpload(inputId, previewId, removeBtnId) {
 }
 async function handleAddApplicant(e) {
   e.preventDefault();
+  
+  // Check authentication before proceeding
+  if (!checkAuthStatus()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Authentication Required',
+      text: 'Please log in to add applicants'
+    });
+    return;
+  }
+  
   const form = e.target;
   const formData = new FormData(form);
 
@@ -705,6 +730,16 @@ async function handleAddApplicant(e) {
 }
 
 async function handleEditApplicant(applicantId) {
+  // Check authentication before proceeding
+  if (!checkAuthStatus()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Authentication Required',
+      text: 'Please log in to edit applicants'
+    });
+    return;
+  }
+  
   const form = document.getElementById('editApplicantForm');
   if (!form) return;
   
@@ -758,6 +793,16 @@ async function handleEditApplicant(applicantId) {
 }
 
 async function deleteApplicant(applicantId) {
+  // Check authentication before proceeding
+  if (!checkAuthStatus()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Authentication Required',
+      text: 'Please log in to delete applicants'
+    });
+    return;
+  }
+  
   const result = await Swal.fire({
     title: 'Are you sure?',
     text: "You won't be able to revert this!",

@@ -3,9 +3,15 @@ import {
   createUserWithEmailAndPassword,
   updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { app } from "./firebase-config.js";
 
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // Toastify helper function
 function showToast(message, color = "#333", duration = 3000) {
@@ -41,7 +47,30 @@ window.register = function () {
       const user = userCredential.user;
       await updateProfile(user, { displayName: name });
 
-      showToast("Registration successful! Redirecting...", "#27ae60", 2000);
+      // Extract first name and last name
+      const nameParts = name.split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      // Add user data to Firestore users collection
+      try {
+        await addDoc(collection(db, 'users'), {
+          uid: user.uid,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          fullName: name,
+          password: password, // Note: In production, you should hash passwords
+          createdAt: new Date(),
+          status: 'active'
+        });
+        
+        showToast("Registration successful! User data saved. Redirecting...", "#27ae60", 2000);
+      } catch (firestoreError) {
+        console.error('Error adding user to Firestore:', firestoreError);
+        showToast("Registration successful but failed to save user data.", "#f39c12", 2000);
+      }
+
       setTimeout(() => {
         window.location.href = "login.html";
       }, 2000);

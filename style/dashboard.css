@@ -715,3 +715,117 @@
     font-size: 1.3rem;
   }
 }
+
+  /* Notification Modal Styles */
+  .notification-modal {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 350px;
+    height: 100vh;
+    background: white;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+  }
+  
+  .notification-modal.show {
+    right: 0;
+  }
+  
+  .notification-header {
+    background: #4a90e2;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .notification-header h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .notification-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .notification-body {
+    padding: 20px;
+  }
+  
+  .notification-item {
+    background: #f8f9fa;
+    border-left: 4px solid #ffc107;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+  }
+  
+  .notification-item h4 {
+    margin: 0 0 8px 0;
+    color: #333;
+    font-size: 16px;
+  }
+  
+  .notification-item p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  .notification-item .days-info {
+    font-weight: bold;
+    color: #e67e22;
+  }
+  
+  .header-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .notification-icon {
+    margin-left: 15px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #4a90e2;
+    position: relative;
+  }
+  
+  .notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+  
+  .no-notifications {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 40px 20px;
+  }

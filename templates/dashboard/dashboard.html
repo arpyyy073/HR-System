@@ -10,8 +10,6 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <style></style>
   </head>
 
   <body>
@@ -21,13 +19,9 @@
       <div class="dashboard-header">
         <div class="header-title">
           <h1>Dashboard Overview</h1>
+          <i class="fas fa-bell notification-icon"></i>
         </div>
-        <div class="header-actions">
-          <div class="notification">
-            <i class="fas fa-bell"></i>
-            <span class="notification-count">0</span>
-          </div>
-        </div>
+
       </div>
 
       <div class="stats-container horizontal">
@@ -121,6 +115,17 @@
       </div>
     </div>
 
+    <!-- Notification Modal -->
+    <div id="notificationModal" class="notification-modal">
+      <div class="notification-header">
+        <h3><i class="fas fa-bell"></i> Intern Notifications</h3>
+        <button class="notification-close" id="closeNotificationModal">&times;</button>
+      </div>
+      <div class="notification-body" id="notificationBody">
+        <div class="no-notifications">No notifications at this time</div>
+      </div>
+    </div>
+
     <div id="departmentModal" class="modal hidden">
       <div class="modal-content">
         <div class="modal-header">
@@ -143,13 +148,19 @@
 
     <script type="module" src="../sidebar/sidebar.js"></script>
 
+    <!-- Enhanced Authentication Guard -->
     <script type="module">
       import { enforceAuthRedirect } from "../utils/authGuard.js";
-
-      enforceAuthRedirect();
+      
+      // Initialize enhanced auth guard with session management
+      enforceAuthRedirect({
+        sessionTimeoutMinutes: 30,  // 30 minutes of inactivity
+        warningMinutes: 5,          // Show warning 5 minutes before timeout
+        checkIntervalSeconds: 60    // Check every minute
+      });
     </script>
 
     <!-- Changed this line to load as module -->
-    <script type="module" src="../../js/dashboard.js"></script>
+    <script type="module" src="../../js/dashboard.js?v=2"></script>
   </body>
 </html>

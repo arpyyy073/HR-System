@@ -26,7 +26,7 @@ class Sidebar extends HTMLElement {
         <a href="../employee/employee.html" data-label="Employees"><i class="fas fa-users"></i></a>
         <a href="../applicants/applicants.html" data-label="Applicants"><i class="fas fa-file-alt"></i></a>
         <a href="../users/users.html" data-label="Users"><i class="fas fa-user-shield"></i></a>
-        <a href="#" data-label="Settings"><i class="fas fa-cog"></i></a>
+        <a href="../settings/settings.html" data-label="Settings"><i class="fas fa-cog"></i></a>
         <div class="logout-section">
           <a href="#" class="logout-link" data-label="Logout"><i class="fas fa-sign-out-alt"></i></a>
         </div>

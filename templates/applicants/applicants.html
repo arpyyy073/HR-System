@@ -146,6 +146,19 @@
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <script type="module" src="../sidebar/sidebar.js"></script>
+      
+      <!-- Authentication Guard -->
+      <script type="module">
+        import { enforceAuthRedirect } from "../utils/authGuard.js";
+        
+        // Initialize auth guard with custom settings
+        enforceAuthRedirect({
+          sessionTimeoutMinutes: 30,  // 30 minutes of inactivity
+          warningMinutes: 5,          // Show warning 5 minutes before timeout
+          checkIntervalSeconds: 60    // Check every minute
+        });
+      </script>
+      
       <script type="module" src="../../js/applicants.js"></script>
     </div>
   </body>
