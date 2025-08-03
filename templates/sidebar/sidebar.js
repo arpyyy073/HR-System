@@ -20,7 +20,7 @@ class Sidebar extends HTMLElement {
     this.innerHTML = `
       <div class="sidebar">
         <div class="logo-container">
-          <img src="/images/assets/logo.png" alt="Logo" />
+          <img src="../../images/assets/logo.png" alt="Logo" />
         </div>
         <a href="../dashboard/dashboard.html" data-label="Dashboard"><i class="fas fa-chart-line"></i></a>
         <a href="../employee/employee.html" data-label="Employees"><i class="fas fa-users"></i></a>

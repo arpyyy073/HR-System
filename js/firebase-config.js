@@ -13,10 +13,7 @@ export const firebaseConfig = {
   measurementId: "G-5YT8H6G8BY"
 };
 
-// Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-
-// Initialize Analytics only if supported
 export let analytics;
 isSupported().then((supported) => {
   if (supported) {
@@ -26,6 +23,5 @@ isSupported().then((supported) => {
   }
 });
 
-// Initialize other services
 export const db = getFirestore(app);
 export const auth = getAuth(app);

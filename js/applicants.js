@@ -1,4 +1,4 @@
-import { db } from '/js/firebase-config.js';
+import { db } from "/js/firebase-config.js";
 import { 
   collection, 
   getDocs, 
@@ -253,7 +253,11 @@ function updateDashboardStats() {
   let sourceCounts = {
     'Website': 0,
     'Walk-in': 0,
-    'Referral': 0
+    'Referral': 0,
+    'Online Post': 0,
+    'Job Board': 0,  
+    'Other': 0,    
+    'Job Fairs': 0   
   };
 
   Object.values(applicantsData).forEach(applicant => {
@@ -279,10 +283,11 @@ function updateDashboardStats() {
 
   // Update source counts
   const sourceCountElements = document.querySelectorAll('.source-count');
-  if (sourceCountElements.length >= 3) {
-    sourceCountElements[0].textContent = (sourceCounts['Website'] || 0) + (sourceCounts['Job Board'] || 0);
-    sourceCountElements[1].textContent = sourceCounts['Other'] || 0;
-    sourceCountElements[2].textContent = sourceCounts['Referral'] || 0;
+  if (sourceCountElements.length >= 4) {
+    sourceCountElements[0].textContent = (sourceCounts['Online Post'] || 0); 
+    sourceCountElements[1].textContent = sourceCounts['Walk-in'] || 0;       
+    sourceCountElements[2].textContent = sourceCounts['Referral'] || 0;      
+    sourceCountElements[3].textContent = sourceCounts['Job Fairs'] || 0;     
   }
 
   // Update chart

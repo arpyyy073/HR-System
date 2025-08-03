@@ -4,8 +4,70 @@ import {
     getDocs, 
     onSnapshot, 
     query,
-    where
+    where,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+function parseHireDate(hireDateStr) {
+  const [month, day, year] = hireDateStr.split("-");
+  return new Date(`${year}-${month}-${day}`);
+}
+
+function getDaysSince(date) {
+  const now = new Date();
+  const diffInMs = now - date;
+  return Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+}
+
+async function fetchDeployNotifications() {
+  const internsRef = collection(db, "employees");
+  const q = query(internsRef, where("department", "==", "Internship"));
+
+  const snapshot = await getDocs(q);
+
+  let deployReadyCount = 0;
+  let deployReadyInterns = [];
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    if (!data.hireDate || !data.firstName || !data.lastName) return;
+
+    const hireDate = parseHireDate(data.hireDate);
+    const daysPassed = getDaysSince(hireDate);
+
+    if (daysPassed >= 15) {
+      deployReadyCount++;
+      deployReadyInterns.push({
+        name: `${data.firstName} ${data.lastName}`,
+        email: data.email,
+        daysPassed,
+        org: data.org,
+        id: doc.id
+      });
+    }
+  });
+
+  document.querySelector(".notification-count").textContent = deployReadyCount;
+  document.querySelector(".notification").addEventListener("click", () => {
+    if (deployReadyCount === 0) {
+      Swal.fire("No Deployment Alerts", "No interns are ready for deployment today.", "info");
+      return;
+    }
+
+    const internHtml = deployReadyInterns
+      .map(i => `<p><strong>${i.name}</strong> (${i.email})<br><small>${i.daysPassed} days since hire • ${i.org}</small></p>`)
+      .join("<hr>");
+
+    Swal.fire({
+      title: "Interns Ready for Deployment",
+      html: internHtml,
+      icon: "info",
+      width: 600,
+      confirmButtonText: "OK"
+    });
+  });
+}
+
+fetchDeployNotifications();
 
 document.addEventListener("DOMContentLoaded", () => {
     // Cache configuration

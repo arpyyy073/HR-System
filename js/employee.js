@@ -396,7 +396,6 @@ async function handleEditEmployeeForm(event) {
     }
 }
 function initializeModals() {
-    // Load employee modal
     fetch('empModal.html')
         .then(response => response.text())
         .then(html => {
@@ -406,7 +405,6 @@ function initializeModals() {
         })
         .catch(console.error);
 
-    // Load add employee modal
     fetch('addEmp.html')
         .then(response => response.text())
         .then(html => {
@@ -419,13 +417,16 @@ function initializeModals() {
         })
         .catch(console.error);
 
-    // Load edit employee modal
+
     fetch('editEmp.html')
-    .then(response => response.text())
-    .then(html => {
-        console.log("Edit modal HTML loaded");
-        document.body.insertAdjacentHTML('beforeend', html);
-    })
+        .then(response => response.text())
+        .then(html => {
+            document.body.insertAdjacentHTML('beforeend', html);
+            const editForm = document.getElementById('editEmployeeForm');
+            if (editForm) {
+                editForm.addEventListener('submit', handleEditEmployeeForm);
+            }
+        })
         .catch(console.error);
 }
 
