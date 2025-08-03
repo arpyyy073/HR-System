@@ -3,9 +3,15 @@ import {
   createUserWithEmailAndPassword,
   updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { app } from "./firebase-config.js";
 
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // Toastify helper function
 function showToast(message, color = "#333", duration = 3000) {
@@ -39,12 +45,49 @@ window.register = function () {
   createUserWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
       const user = userCredential.user;
-      await updateProfile(user, { displayName: name });
+      
+      // Try to update profile, but don't fail if it doesn't work
+      try {
+        await updateProfile(user, { displayName: name });
+        console.log('✅ Profile updated successfully');
+      } catch (profileError) {
+        console.warn('⚠️ Profile update failed, but continuing with registration:', profileError);
+      }
 
-      showToast("Registration successful! Redirecting...", "#27ae60", 2000);
-      setTimeout(() => {
-        window.location.href = "login.html";
-      }, 2000);
+      // Extract first name and last name
+      const nameParts = name.split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      // Add user data to Firestore users collection using user's UID as document ID
+      try {
+        await setDoc(doc(db, 'users', user.uid), {
+          uid: user.uid,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          fullName: name,
+          password: password, // Note: In production, you should hash passwords
+          createdAt: new Date(),
+          status: 'active'
+        });
+        
+        console.log('✅ User data saved to Firestore');
+        showToast("Registration successful! User data saved. Redirecting...", "#27ae60", 2000);
+        
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+        
+      } catch (firestoreError) {
+        console.error('❌ Error adding user to Firestore:', firestoreError);
+        showToast("Registration successful but failed to save user data. Please contact support.", "#f39c12", 3000);
+        
+        // Still redirect to login even if Firestore save fails
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 3000);
+      }
     })
     .catch((error) => {
       let message = error.message;
