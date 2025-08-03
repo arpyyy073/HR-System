@@ -534,6 +534,16 @@ function showEmployeeDetails(employee) {
     setTextContent("empRefer", employee.refer);
     setTextContent("empHired", employee.hireDate ? formathireDate(employee.hireDate) : '-');
     setTextContent("status", employee.status);
+    
+    // Handle termination date display
+    const terminationDateInfo = document.getElementById('terminationDateInfo');
+    if (employee.status === 'Terminated' && employee.terminationDate) {
+        setTextContent("empTerminationDate", formathireDate(employee.terminationDate));
+        if (terminationDateInfo) terminationDateInfo.style.display = 'block';
+    } else {
+        if (terminationDateInfo) terminationDateInfo.style.display = 'none';
+    }
+    
     setTextContent("empstatus", employee.empstatus);
 
     modal.style.display = "flex";
@@ -593,7 +603,11 @@ function openEditEmployeeModal(employee, employeeId) {
     setValue("editRefer", employee.refer);
     setValue("edithireDate", formatDateForInput(employee.hireDate));
     setValue("editStatus", employee.status);
+    setValue("editTerminationDate", formatDateForInput(employee.terminationDate));
     setValue("editempstatus", employee.empstatus);
+
+    // Show/hide termination date field based on status
+    toggleTerminationDate('editStatus', 'editTerminationDateGroup');
 
     // Handle department checkboxes
     const departmentCheckboxes = modal.querySelectorAll('input[name="department[]"]');
@@ -648,6 +662,7 @@ function handleAddEmployeeForm(event) {
         refer: formData.get('ref'),
         hireDate: formData.get('hireDate'),
         status: formData.get('status'),
+        terminationDate: formData.get('terminationDate'),
         empstatus: formData.get('empstatus')
     };
     
@@ -705,6 +720,7 @@ async function handleEditEmployeeForm(event) {
         refer: formData.get('refer'),
         hireDate: formData.get('hireDate'),
         status: formData.get('status'),
+        terminationDate: formData.get('terminationDate'),
         empstatus: formData.get('empstatus'),
         updatedAt: new Date().toISOString()
     };
@@ -914,6 +930,83 @@ function setupEventListeners() {
             }
         });
     });
+
+    // Handle status change for termination date visibility
+    document.addEventListener('change', function(event) {
+        // Add Employee form status change
+        if (event.target.id === 'status') {
+            toggleTerminationDate('status', 'terminationDateGroup');
+        }
+        
+        // Edit Employee form status change
+        if (event.target.id === 'editStatus') {
+            toggleTerminationDate('editStatus', 'editTerminationDateGroup');
+        }
+    });
+}
+
+// Function to toggle termination date field visibility
+function toggleTerminationDate(statusSelectId, terminationGroupId) {
+    const statusSelect = document.getElementById(statusSelectId);
+    const terminationGroup = document.getElementById(terminationGroupId);
+    
+    if (statusSelect && terminationGroup) {
+        if (statusSelect.value === 'Terminated') {
+            terminationGroup.style.display = 'block';
+            // Set termination date to today if not already set
+            const terminationInput = terminationGroup.querySelector('input[type="date"]');
+            if (terminationInput && !terminationInput.value) {
+                terminationInput.value = new Date().toISOString().split('T')[0];
+            }
+        } else {
+            terminationGroup.style.display = 'none';
+            // Clear termination date when not terminated
+            const terminationInput = terminationGroup.querySelector('input[type="date"]');
+            if (terminationInput) {
+                terminationInput.value = '';
+            }
+        }
+    }
+}
+
+// Function to update employee status options from settings
+window.updateEmployeeStatusOptionsFromSettings = function(statuses) {
+    // Update status filter dropdown
+    updateStatusDropdown('filterStatus', 'All Status', statuses);
+    
+    // Update add employee form status dropdown (exclude Terminated)
+    const addFormStatuses = statuses.filter(status => status !== 'Terminated');
+    updateStatusDropdown('status', 'Select Status', addFormStatuses);
+    
+    // Update edit employee form status dropdown (include all statuses)
+    updateStatusDropdown('editStatus', 'Select Status', statuses);
+};
+
+// Helper function to update a specific dropdown with provided statuses
+function updateStatusDropdown(dropdownId, defaultOptionText, statuses) {
+    const dropdown = document.getElementById(dropdownId);
+    if (dropdown) {
+        // Store current value
+        const currentValue = dropdown.value;
+        
+        // Clear existing options except the default
+        while (dropdown.children.length > 1) {
+            dropdown.removeChild(dropdown.lastChild);
+        }
+        
+        // Add provided statuses
+        statuses.forEach(status => {
+            const option = document.createElement('option');
+            option.value = status;
+            option.textContent = status;
+            dropdown.appendChild(option);
+        });
+        
+        // Restore current value if it still exists
+        if (statuses.includes(currentValue)) {
+            dropdown.value = currentValue;
+        }
+    }
 }
 
 window.showEmployeeDetails = showEmployeeDetails;

@@ -24,8 +24,58 @@ let settingsData = {
         internNotifications: true,
         birthdayNotifications: false,
         anniversaryNotifications: false
+    },
+    systemPreferences: {
+        theme: 'light',
+        language: 'en',
+        dateFormat: 'MM/DD/YYYY',
+        timeFormat: '12',
+        timezone: 'America/New_York',
+        autoSave: true,
+        soundNotifications: false,
+        compactView: false
     }
 };
+
+// Function to update employee status options across all forms and filters
+function updateEmployeeStatusOptions() {
+    // Update status options in employee management forms and filters
+    updateStatusDropdown('filterStatus', 'All Status', settingsData.statuses);
+    
+    // Update add employee form status dropdown (exclude Terminated)
+    const addFormStatuses = settingsData.statuses.filter(status => status !== 'Terminated');
+    updateStatusDropdown('status', 'Select Status', addFormStatuses);
+    
+    // Update edit employee form status dropdown (include all statuses)
+    updateStatusDropdown('editStatus', 'Select Status', settingsData.statuses);
+}
+
+// Helper function to update a specific dropdown with provided statuses
+function updateStatusDropdown(dropdownId, defaultOptionText, statuses) {
+    const dropdown = document.getElementById(dropdownId);
+    if (dropdown) {
+        // Store current value
+        const currentValue = dropdown.value;
+        
+        // Clear existing options except the default
+        while (dropdown.children.length > 1) {
+            dropdown.removeChild(dropdown.lastChild);
+        }
+        
+        // Add provided statuses
+        statuses.forEach(status => {
+            const option = document.createElement('option');
+            option.value = status;
+            option.textContent = status;
+            dropdown.appendChild(option);
+        });
+        
+        // Restore current value if it still exists
+        if (statuses.includes(currentValue)) {
+            dropdown.value = currentValue;
+        }
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     initializeSettings();
@@ -48,6 +98,7 @@ function initializeSettings() {
     
     renderDepartments();
     renderStatuses();
+    initializeSystemPreferences();
 }
 
 function setupEventListeners() {
@@ -81,6 +132,9 @@ function setupEventListeners() {
             if ((e.target.id === 'birthday-threshold' || e.target.id === 'anniversary-threshold') && value > 30) e.target.value = 30;
         });
     });
+
+    // System preferences event listeners
+    setupSystemPreferencesListeners();
 }
 
 function switchTab(tabName) {
@@ -117,9 +171,15 @@ async function loadSettingsData() {
             } else if (doc.id === 'statuses') {
                 settingsData.statuses = data.list || settingsData.statuses;
                 renderStatuses();
+                updateEmployeeStatusOptions();
             } else if (doc.id === 'notifications') {
                 settingsData.notifications = { ...settingsData.notifications, ...data };
                 populateNotificationSettings(data);
+            } else if (doc.id === 'systemPreferences') {
+                settingsData.systemPreferences = { ...settingsData.systemPreferences, ...data };
+                populateSystemPreferences(data);
+                updateDateTimePreview();
+                applyTheme();
             }
         });
     } catch (error) {
@@ -330,57 +390,51 @@ function renderStatuses() {
     });
 }
 
-window.addStatus = async function() {
-    const newStatusInput = document.getElementById('new-status');
-    const statusName = newStatusInput.value.trim();
+window.addStatus = async function addStatus() {
+    const statusInput = document.getElementById('new-status');
+    const statusValue = statusInput.value.trim();
     
-    if (!statusName) {
-        showToast('Please enter a status name', 'warning');
+    if (!statusValue) {
+        showToast('Please enter a status name', 'error');
         return;
     }
     
-    if (settingsData.statuses.includes(statusName)) {
-        showToast('Status already exists', 'warning');
+    if (settingsData.statuses.includes(statusValue)) {
+        showToast('Status already exists', 'error');
         return;
     }
     
-    try {
-        settingsData.statuses.push(statusName);
-        await saveStatuses();
-        renderStatuses();
-        newStatusInput.value = '';
-        showToast('Status added successfully!', 'success');
-    } catch (error) {
-        console.error('Error adding status:', error);
-        showToast('Error adding status', 'error');
-    }
-};
+    settingsData.statuses.push(statusValue);
+    statusInput.value = '';
+    renderStatuses();
+    saveStatuses();
+    updateEmployeeStatusOptions();
+}
 
-window.removeStatus = async function(index) {
-    const statusName = settingsData.statuses[index];
+window.removeStatus = async function removeStatus(index) {
+    if (settingsData.statuses.length <= 1) {
+        showToast('At least one status is required', 'error');
+        return;
+    }
     
-    const result = await Swal.fire({
+    Swal.fire({
         title: 'Are you sure?',
-        text: `Remove "${statusName}" status?`,
+        text: `Remove status "${settingsData.statuses[index]}"?`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#e74c3c',
-        cancelButtonColor: '#3085d6',
+        confirmButtonColor: '#e3342f',
+        cancelButtonColor: '#6c757d',
         confirmButtonText: 'Yes, remove it!'
-    });
-
-    if (result.isConfirmed) {
-        try {
+    }).then((result) => {
+        if (result.isConfirmed) {
             settingsData.statuses.splice(index, 1);
-            await saveStatuses();
             renderStatuses();
+            saveStatuses();
+            updateEmployeeStatusOptions();
             showToast('Status removed successfully!', 'success');
-        } catch (error) {
-            console.error('Error removing status:', error);
-            showToast('Error removing status', 'error');
         }
-    }
-};
+    });
+}
 
 async function saveStatuses() {
     await setDoc(doc(db, 'settings', 'statuses'), {
@@ -429,3 +483,159 @@ function showToast(message, type = 'info') {
         title: message
     });
 }
+
+// System Preferences Functions
+function initializeSystemPreferences() {
+    populateSystemPreferences(settingsData.systemPreferences);
+    updateDateTimePreview();
+}
+
+function setupSystemPreferencesListeners() {
+    // Date format change listener
+    const dateFormatSelect = document.getElementById('date-format-select');
+    if (dateFormatSelect) {
+        dateFormatSelect.addEventListener('change', updateDateTimePreview);
+    }
+
+    // Time format change listener
+    const timeFormatSelect = document.getElementById('time-format-select');
+    if (timeFormatSelect) {
+        timeFormatSelect.addEventListener('change', updateDateTimePreview);
+    }
+
+    // Theme change listener
+    const themeSelect = document.getElementById('theme-select');
+    if (themeSelect) {
+        themeSelect.addEventListener('change', applyTheme);
+    }
+}
+
+function populateSystemPreferences(data) {
+    if (!data) return;
+
+    // Populate form fields
+    const fields = {
+        'theme-select': data.theme,
+        'language-select': data.language,
+        'date-format-select': data.dateFormat,
+        'time-format-select': data.timeFormat,
+        'timezone-select': data.timezone
+    };
+
+    Object.entries(fields).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element && value) {
+            element.value = value;
+        }
+    });
+
+    // Populate checkboxes
+    const checkboxes = {
+        'auto-save': data.autoSave,
+        'sound-notifications': data.soundNotifications,
+        'compact-view': data.compactView
+    };
+
+    Object.entries(checkboxes).forEach(([id, checked]) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.checked = checked;
+        }
+    });
+}
+
+function updateDateTimePreview() {
+    const dateFormatSelect = document.getElementById('date-format-select');
+    const timeFormatSelect = document.getElementById('time-format-select');
+    const datePreview = document.getElementById('date-preview');
+    const timePreview = document.getElementById('time-preview');
+
+    if (!dateFormatSelect || !timeFormatSelect || !datePreview || !timePreview) return;
+
+    const now = new Date();
+    const dateFormat = dateFormatSelect.value;
+    const timeFormat = timeFormatSelect.value;
+
+    // Format date preview
+    let formattedDate = '';
+    switch (dateFormat) {
+        case 'MM/DD/YYYY':
+            formattedDate = `${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getDate().toString().padStart(2, '0')}/${now.getFullYear()}`;
+            break;
+        case 'DD/MM/YYYY':
+            formattedDate = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
+            break;
+        case 'YYYY-MM-DD':
+            formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+            break;
+        case 'DD MMM YYYY':
+            formattedDate = `${now.getDate()} ${now.toLocaleDateString('en', { month: 'short' })} ${now.getFullYear()}`;
+            break;
+        case 'MMM DD, YYYY':
+            formattedDate = `${now.toLocaleDateString('en', { month: 'short' })} ${now.getDate()}, ${now.getFullYear()}`;
+            break;
+    }
+
+    // Format time preview
+    let formattedTime = '';
+    if (timeFormat === '12') {
+        formattedTime = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    } else {
+        formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+    }
+
+    datePreview.textContent = `Preview: ${formattedDate}`;
+    timePreview.textContent = `Preview: ${formattedTime}`;
+}
+
+function applyTheme() {
+    const themeSelect = document.getElementById('theme-select');
+    if (!themeSelect) return;
+
+    const selectedTheme = themeSelect.value;
+    const body = document.body;
+
+    // Remove existing theme classes
+    body.classList.remove('light-theme', 'dark-theme');
+
+    // Apply new theme
+    if (selectedTheme === 'dark') {
+        body.classList.add('dark-theme');
+    } else if (selectedTheme === 'light') {
+        body.classList.add('light-theme');
+    } else if (selectedTheme === 'auto') {
+        // Use system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.classList.add('dark-theme');
+        } else {
+            body.classList.add('light-theme');
+        }
+    }
+}
+
+window.saveSystemPreferences = async function() {
+    try {
+        const systemPreferencesData = {
+            theme: document.getElementById('theme-select').value,
+            language: document.getElementById('language-select').value,
+            dateFormat: document.getElementById('date-format-select').value,
+            timeFormat: document.getElementById('time-format-select').value,
+            timezone: document.getElementById('timezone-select').value,
+            autoSave: document.getElementById('auto-save').checked,
+            soundNotifications: document.getElementById('sound-notifications').checked,
+            compactView: document.getElementById('compact-view').checked,
+            updatedAt: new Date()
+        };
+
+        await setDoc(doc(db, 'settings', 'systemPreferences'), systemPreferencesData);
+        settingsData.systemPreferences = systemPreferencesData;
+        
+        // Apply theme immediately
+        applyTheme();
+        
+        showToast('System preferences saved successfully!', 'success');
+    } catch (error) {
+        console.error('Error saving system preferences:', error);
+        showToast('Error saving system preferences', 'error');
+    }
+};

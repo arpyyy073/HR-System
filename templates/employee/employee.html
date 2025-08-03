@@ -51,6 +51,8 @@
           <option value="">All Status</option>
           <option value="Active">Active</option>
           <option value="Inactive">Inactive</option>
+          <option value="On Leave">On Leave</option>
+          <option value="Terminated">Terminated</option>
         </select>
       </div>
 
@@ -72,10 +74,11 @@
       </div>
     </div>
 
-    <link rel="preload" href="../../js/employee.js" as="script">
-    <link rel="preload" href="../../js/firebase-config.js" as="script">
+    <link rel="preload" href="../../js/employee.js" as="module" crossorigin="anonymous">
+    <link rel="preload" href="../../js/firebase-config.js" as="module" crossorigin="anonymous">
     
     <script type="module" src="../sidebar/sidebar.js"></script>
+    <script type="module" src="../../js/themeManager.js"></script>
     <script type="module">
       import { enforceAuthRedirect } from "../utils/authGuard.js";
       
@@ -88,5 +91,36 @@
     </script>
     
     <script type="module" src="../../js/employee.js?v=5"></script>
+    <script type="module">
+      // Update status options when page loads
+      import { db } from '../../js/firebase-config.js';
+      import { collection, getDocs, query } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+      
+      document.addEventListener('DOMContentLoaded', async function() {
+        try {
+          // Fetch current statuses from Firestore
+          const settingsQuery = query(collection(db, 'settings'));
+          const settingsSnapshot = await getDocs(settingsQuery);
+          
+          let statuses = ['Active', 'Inactive', 'On Leave', 'Terminated']; // Default statuses
+          
+          settingsSnapshot.forEach((doc) => {
+            if (doc.id === 'statuses') {
+              const data = doc.data();
+              if (data.list && Array.isArray(data.list)) {
+                statuses = data.list;
+              }
+            }
+          });
+          
+          // Update status dropdowns
+          if (typeof updateEmployeeStatusOptionsFromSettings === 'function') {
+            updateEmployeeStatusOptionsFromSettings(statuses);
+          }
+        } catch (error) {
+          console.log('Could not load status options from settings:', error);
+        }
+      });
+    </script>
   </body>
 </html>

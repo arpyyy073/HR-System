@@ -40,6 +40,58 @@ body {
   color: #1f1f1f;
 }
 
+/* Dark Theme Styles */
+body.dark-theme {
+  background: linear-gradient(
+    270deg,
+    #1a1a1a,
+    #2d2d2d,
+    #5a0d00,
+    #2d2d2d,
+    #1a1a1a
+  );
+  background-size: 800% 800%;
+  color: #e0e0e0;
+}
+
+body.dark-theme .wrap-container {
+  background-color: #2d2d2d;
+  border-color: #444;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .top-btn {
+  background-color: #3a3a3a;
+  color: #e0e0e0;
+  border: 1px solid #555;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .top-btn:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  background-color: #444;
+}
+
+body.dark-theme .swal-title {
+  color: #e0e0e0;
+}
+
+body.dark-theme .swal-text {
+  color: #ccc;
+}
+
+body.dark-theme .swal-confirm,
+body.dark-theme .swal-cancel {
+  background-color: #3a3a3a;
+  color: #e0e0e0;
+  border: 1px solid #555;
+}
+
+body.dark-theme .swal-confirm:hover,
+body.dark-theme .swal-cancel:hover {
+  background-color: #444;
+}
+
 @keyframes gradientMove {
   0% {
     background-position: 0% 50%;

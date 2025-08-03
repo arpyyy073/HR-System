@@ -382,3 +382,136 @@
   body.modal-open {
     overflow: hidden;
   }
+
+/* Dark Theme Styles */
+body.dark-theme .modal, 
+body.dark-theme .form-modal {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+body.dark-theme .modal-content, 
+body.dark-theme .form-modal-content {
+  background: #2d2d2d;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .modal-header {
+  background: linear-gradient(to right, #1a1a1a, #5a0d00);
+}
+
+body.dark-theme .close-modal {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+}
+
+body.dark-theme .close-modal:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-theme .section-title {
+  color: #4a90e2;
+  border-bottom: 1px solid #444;
+}
+
+body.dark-theme .form-group label, 
+body.dark-theme .info-item label {
+  color: #e0e0e0;
+}
+
+body.dark-theme .form-control, 
+body.dark-theme .info-value input,
+body.dark-theme .info-value select,
+body.dark-theme .info-value textarea {
+  background-color: #3a3a3a;
+  color: #e0e0e0;
+  border: 1px solid #555;
+}
+
+body.dark-theme .info-value {
+  color: #e0e0e0;
+}
+
+body.dark-theme .form-control:focus,
+body.dark-theme .info-value input:focus,
+body.dark-theme .info-value select:focus,
+body.dark-theme .info-value textarea:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+}
+
+body.dark-theme .info-value select[name="status"] {
+  background: #3a3a3a;
+}
+
+body.dark-theme .modal-footer {
+  border-top: 1px solid #444;
+  background: #3a3a3a;
+}
+
+body.dark-theme .btn-print, 
+body.dark-theme .btn-cancel {
+  background: #3a3a3a;
+  border: 1px solid #555;
+  color: #e0e0e0;
+}
+
+body.dark-theme .btn-print:hover, 
+body.dark-theme .btn-cancel:hover {
+  background: #444;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .btn-resume, 
+body.dark-theme .btn-submit {
+  background: #4a6cf7;
+  border: 1px solid #4a6cf7;
+}
+
+body.dark-theme .btn-resume:hover, 
+body.dark-theme .btn-submit:hover {
+  background: #3c5ae6;
+  border-color: #3c5ae6;
+  box-shadow: 0 2px 8px rgba(74, 108, 247, 0.5);
+}
+
+body.dark-theme .btn-remove-file {
+  background: #dc3545;
+}
+
+body.dark-theme .btn-remove-file:hover {
+  background: #c82333;
+}
+
+body.dark-theme .file-upload-container {
+  border: 2px dashed #555;
+  background: #3a3a3a;
+}
+
+body.dark-theme .file-preview {
+  background: #3a3a3a;
+  border: 1px solid #555;
+}
+
+body.dark-theme .file-upload-label {
+  background: #4a6cf7;
+}
+
+body.dark-theme .file-upload-label:hover {
+  background: #3c5ae6;
+}
+
+body.dark-theme .status-in-progress { 
+  color: #f39c12; 
+}
+
+body.dark-theme .status-callback { 
+  color: #3498db; 
+}
+
+body.dark-theme .status-Passed { 
+  color: #2ecc71; 
+}
+
+body.dark-theme .status-rejected { 
+  color: #e74c3c; 
+}

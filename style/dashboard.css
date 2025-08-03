@@ -829,3 +829,167 @@
     font-style: italic;
     padding: 40px 20px;
   }
+
+/* Dark Theme Styles */
+body.dark-theme .dashboard-header {
+  border-bottom: 2px solid #444;
+}
+
+body.dark-theme .header-title h1 {
+  color: #e0e0e0;
+}
+
+body.dark-theme .stats-container {
+  background-color: #2d2d2d;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .stat-card {
+  background-color: #3a3a3a;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .stat-card h3 {
+  color: #e0e0e0;
+}
+
+body.dark-theme .stat-icon {
+  color: #a0a0a0;
+}
+
+body.dark-theme .stat-icon:hover {
+  color: #c0c0c0;
+}
+
+body.dark-theme .circle-container {
+  background: linear-gradient(145deg, #2a2a2a, #3a3a3a);
+  box-shadow: 4px 4px 8px #1a1a1a, -4px -4px 8px #3a3a3a;
+}
+
+body.dark-theme .stat-counter {
+  color: #e0e0e0;
+}
+
+body.dark-theme .stat-name {
+  color: #a0a0a0;
+}
+
+body.dark-theme .org-container {
+  background: #2d2d2d;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .org-container h3 {
+  color: #e0e0e0;
+}
+
+body.dark-theme .stat-card-org {
+  background: linear-gradient(145deg, #3a3a5a, #4a4a6a);
+  box-shadow: 3px 3px 6px #1a1a1a;
+  color: #e0e0e0;
+}
+
+body.dark-theme .stat-card-org:hover {
+  background-color: #5a5a7a;
+}
+
+body.dark-theme .department-container {
+  background: #2d2d2d;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .department-container h3 {
+  color: #e0e0e0;
+}
+
+body.dark-theme .dept-card {
+  background: #3a3a3a;
+  color: #e0e0e0;
+}
+
+body.dark-theme .dept-card:nth-child(1) {
+  background: #4a1a1a;
+  border-left: 6px solid #8a2a2a;
+}
+
+body.dark-theme .dept-card:nth-child(2) {
+  background: #1a2a4a;
+  border-left: 6px solid #2a5a9a;
+}
+
+body.dark-theme .dept-card:nth-child(3) {
+  background: #1a3a1a;
+  border-left: 6px solid #2a7a2a;
+}
+
+body.dark-theme .dept-card:nth-child(4) {
+  background: #3a1a3a;
+  border-left: 6px solid #6a2a8a;
+}
+
+body.dark-theme .dept-card:nth-child(5) {
+  background: #4a3a1a;
+  border-left: 6px solid #9a5a0a;
+}
+
+body.dark-theme .dept-card:nth-child(6) {
+  background: #1a4a4a;
+  border-left: 6px solid #0a7a6a;
+}
+
+body.dark-theme .dept-table th {
+  background-color: #3a3a3a;
+  color: #e0e0e0;
+  border-bottom: 2px solid #444;
+}
+
+body.dark-theme .dept-table td {
+  border-bottom: 1px solid #444;
+}
+
+body.dark-theme .dept-table tr:hover td {
+  background-color: #3a3a3a;
+}
+
+body.dark-theme .modal-content {
+  background: #2d2d2d;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .modal-header {
+  color: #e0e0e0;
+}
+
+body.dark-theme .modal-header h2 {
+  color: #e0e0e0;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+body.dark-theme .close-btn {
+  background: rgba(255,255,255,0.1);
+  color: #e0e0e0;
+}
+
+body.dark-theme .close-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+body.dark-theme .notification {
+  color: #e0e0e0;
+}
+
+body.dark-theme .notification i {
+  color: #a0a0a0;
+}
+
+body.dark-theme .notification i:hover {
+  color: #c0c0c0;
+}
+
+body.dark-theme .empty-state {
+  color: #a0a0a0;
+}
+
+body.dark-theme .loading-state {
+  color: #a0a0a0;
+}

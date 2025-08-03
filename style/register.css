@@ -228,3 +228,75 @@ body {
     font-size: 16px; 
   }
 }
+
+/* Dark Theme Styles */
+body.dark-theme {
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 25%),
+    radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 25%),
+    linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+body.dark-theme .particle {
+  background: rgba(154, 17, 0, 0.15);
+}
+
+body.dark-theme .register-container {
+  background: rgba(45, 45, 45, 0.93);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .register-container h2 {
+  color: #e0e0e0;
+}
+
+body.dark-theme .register-container h2 span {
+  color: #a0a0a0;
+}
+
+body.dark-theme .email-container p, 
+body.dark-theme .password-container p {
+  color: #e0e0e0;
+}
+
+body.dark-theme .email-container input, 
+body.dark-theme .password-container input {
+  background: rgba(58, 58, 58, 0.9);
+  border: 2px solid #555;
+  color: #e0e0e0;
+}
+
+body.dark-theme .email-container input::placeholder, 
+body.dark-theme .password-container input::placeholder {
+  color: #a0a0a0;
+}
+
+body.dark-theme .email-container input:focus, 
+body.dark-theme .password-container input:focus {
+  border-color: #801100;
+  box-shadow: 0 0 0 3px rgba(128, 17, 0, 0.3);
+  background: #3a3a3a;
+}
+
+body.dark-theme .button-container button {
+  background: linear-gradient(to right, #5a0d00, #801100);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .button-container button:hover {
+  background: linear-gradient(to right, #801100, #5a0d00);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .button-container p {
+  color: #a0a0a0;
+}
+
+body.dark-theme .button-container a {
+  color: #4a90e2;
+}
+
+body.dark-theme .button-container a:hover {
+  color: #5a9ced;
+}
