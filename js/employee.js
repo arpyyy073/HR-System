@@ -998,31 +998,57 @@ window.updateEmployeeStatusOptionsFromSettings = function(statuses) {
 // Helper function to update a specific dropdown with provided statuses
 function updateStatusDropdown(dropdownId, defaultOptionText, statuses) {
     const dropdown = document.getElementById(dropdownId);
-    if (dropdown) {
-        // Store current value
-        const currentValue = dropdown.value;
-        
-        // Clear ALL existing options
-        dropdown.innerHTML = '';
-        
-        // Add default option first
-        const defaultOption = document.createElement('option');
-        defaultOption.value = '';
-        defaultOption.textContent = defaultOptionText;
-        dropdown.appendChild(defaultOption);
-        
-        // Add provided statuses
-        statuses.forEach(status => {
-            const option = document.createElement('option');
-            option.value = status;
-            option.textContent = status;
-            dropdown.appendChild(option);
-        });
-        
-        // Restore current value if it still exists
-        if (statuses.includes(currentValue)) {
-            dropdown.value = currentValue;
-        }
+    if (!dropdown) return;
+    
+    // Store current value and selection state
+    const currentValue = dropdown.value;
+    const isDropdownOpen = document.activeElement === dropdown;
+    
+    // Check if update is actually needed (avoid unnecessary rebuilds)
+    const currentOptions = Array.from(dropdown.options).slice(1).map(opt => opt.value);
+    const statusesChanged = JSON.stringify(currentOptions.sort()) !== JSON.stringify([...statuses].sort());
+    
+    if (!statusesChanged && dropdown.options.length > 0) {
+        return; // No need to update if statuses haven't changed
+    }
+    
+    // Don't update if dropdown is currently being interacted with
+    if (isDropdownOpen) {
+        setTimeout(() => updateStatusDropdown(dropdownId, defaultOptionText, statuses), 100);
+        return;
+    }
+    
+    // Store current value before clearing
+    const valueToRestore = currentValue;
+    
+    // Clear ALL existing options
+    dropdown.innerHTML = '';
+    
+    // Add default option first
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = defaultOptionText;
+    dropdown.appendChild(defaultOption);
+    
+    // Add provided statuses
+    statuses.forEach(status => {
+        const option = document.createElement('option');
+        option.value = status;
+        option.textContent = status;
+        dropdown.appendChild(option);
+    });
+    
+    // Restore current value if it still exists
+    if (statuses.includes(valueToRestore)) {
+        dropdown.value = valueToRestore;
+    } else if (valueToRestore && valueToRestore !== '') {
+        // If the previous value no longer exists, keep it selected but mark as invalid
+        const invalidOption = document.createElement('option');
+        invalidOption.value = valueToRestore;
+        invalidOption.textContent = `${valueToRestore} (Legacy)`;
+        invalidOption.style.color = '#888';
+        dropdown.appendChild(invalidOption);
+        dropdown.value = valueToRestore;
     }
 }
 
