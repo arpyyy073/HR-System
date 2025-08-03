@@ -196,7 +196,7 @@ function showEmployeeDetails(employee) {
     setTextContent("empDept", departments);
     
     setTextContent("empRefer", employee.refer);
-    setTextContent("empHire", employee.hireDate ? formathireDate(employee.hireDate) : '-');
+    setTextContent("empHired", employee.hireDate ? formathireDate(employee.hireDate) : '-');
     setTextContent("status", employee.status);
     setTextContent("empstatus", employee.empstatus);
 

@@ -69,6 +69,52 @@ async function fetchDeployNotifications() {
 
 fetchDeployNotifications();
 
+async function fetchOnboardingNotifications() {
+  const employeesRef = collection(db, "employees");
+  const q = query(employeesRef, where("department", "!=", "")); // Get all employees with a department
+
+  const snapshot = await getDocs(q);
+
+  let onboardingSoon = [];
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    if (!data.hireDate || !data.firstName || !data.lastName) return;
+
+    const hireDate = parseHireDate(data.hireDate);
+    const now = new Date();
+    const diffDays = Math.ceil((hireDate - now) / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 0 && diffDays <= 2) {
+      onboardingSoon.push({
+        name: `${data.firstName} ${data.lastName}`,
+        email: data.email,
+        daysUntil: diffDays,
+        org: data.org,
+        id: doc.id
+      });
+    }
+  });
+
+  if (onboardingSoon.length > 0) {
+    document.querySelector(".onboarding-notification-count").textContent = onboardingSoon.length;
+    document.querySelector(".onboarding-notification").addEventListener("click", () => {
+      const html = onboardingSoon
+        .map(i => `<p><strong>${i.name}</strong> (${i.email})<br><small>Onboarding in ${i.daysUntil} day(s) • ${i.org}</small></p>`)
+        .join("<hr>");
+      Swal.fire({
+        title: "Upcoming Onboardings",
+        html,
+        icon: "info",
+        width: 600,
+        confirmButtonText: "OK"
+      });
+    });
+  }
+}
+
+fetchOnboardingNotifications();
+
 document.addEventListener("DOMContentLoaded", () => {
     // Cache configuration
     const cacheKey = 'employeeCountsCache';
