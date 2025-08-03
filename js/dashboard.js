@@ -426,40 +426,37 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 3000);
     }
     
-    // Notification Functions
     function checkInternNotifications() {
         internNotifications = [];
         const currentDate = new Date();
         
         allEmployeesCache.forEach(employee => {
-            // Check if employee is an intern and has a hire date
-            if (employee.department && 
-                normalizeString(employee.department) === 'internship' &&
+            let isIntern = false;
+            if (Array.isArray(employee.department)) {
+                isIntern = employee.department.some(dept => normalizeString(dept) === 'internship');
+            } else if (employee.department) {
+                isIntern = normalizeString(employee.department) === 'internship';
+            }
+            
+            if (isIntern &&
                 employee.hireDate &&
                 (!employee.status || normalizeString(employee.status) === 'active')) {
                 
                 let hireDate;
                 
-                // Handle different date formats
                 if (employee.hireDate.toDate) {
-                    // Firestore Timestamp
                     hireDate = employee.hireDate.toDate();
                 } else if (typeof employee.hireDate === 'string') {
-                    // String date
                     hireDate = new Date(employee.hireDate);
                 } else if (employee.hireDate instanceof Date) {
-                    // Already a Date object
                     hireDate = employee.hireDate;
                 } else {
-                    // Skip if we can't parse the date
                     return;
                 }
                 
-                // Calculate days since hire
                 const timeDiff = currentDate.getTime() - hireDate.getTime();
                 const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
                 
-                // If intern has been working for 15 or more days
                 if (daysDiff >= 15) {
                     internNotifications.push({
                         id: employee.id,
@@ -481,7 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const notificationIcon = document.querySelector('.notification-icon');
         if (!notificationIcon) return;
         
-        // Remove existing badge
+            // Remove existing badge
         const existingBadge = notificationIcon.querySelector('.notification-badge');
         if (existingBadge) {
             existingBadge.remove();

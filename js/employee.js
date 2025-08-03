@@ -10,7 +10,7 @@ import {
     onSnapshot,
     query
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-// Firebase Auth is handled by authGuard.js - no direct auth imports needed
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 let employeesTable;
 let employeesData = {};
@@ -20,6 +20,19 @@ let loadingIndicator = null;
 // Cache configuration
 const CACHE_KEY = 'employeesCache';
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Authentication check function
+function checkAuthStatus() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    
+    if (!user) {
+        console.error('❌ User not authenticated');
+        return false;
+    }
+    
+    return true;
+}
 
 // Storage monitoring function
 function getStorageInfo() {
@@ -989,10 +1002,14 @@ function updateStatusDropdown(dropdownId, defaultOptionText, statuses) {
         // Store current value
         const currentValue = dropdown.value;
         
-        // Clear existing options except the default
-        while (dropdown.children.length > 1) {
-            dropdown.removeChild(dropdown.lastChild);
-        }
+        // Clear ALL existing options
+        dropdown.innerHTML = '';
+        
+        // Add default option first
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = defaultOptionText;
+        dropdown.appendChild(defaultOption);
         
         // Add provided statuses
         statuses.forEach(status => {
